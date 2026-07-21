@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<yml_catalog date="2026-07-21 05:38">
+  <shop>
+    <name>ТПК Кронос</name>
+    <company>ООО ТПК «Кронос»</company>
+    <url>https://tpkkronos.ru</url>
+    <currencies><currency id="RUB" rate="1"/></currencies>
+    <categories>
+      <category id="1">Конвейеры ленточные</category>
+      <category id="2">Конвейеры пластинчатые</category>
+      <category id="3">Конвейеры роликовые / рольганги</category>
+      <category id="4">Накопительные столы</category>
+    </categories>
+    <offers>
+      <offer id="kron-pryamoy" available="true">
+        <name>Прямой ленточный конвейер</name>
+        <vendor>КРОНОС</vendor>
+        <url>https://tpkkronos.ru/product/gorizontalnyj-lentochnyj-konvejer/</url>
+        <price>55000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://tpkkronos.ru/img/catalog/pryamoy.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/pryamoy_1.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/pryamoy_2.jpg</picture>
+        <description>Базовое оборудование для межоперационного перемещения штучных и сыпучих грузов на производстве и складе. Изготовление под заказ по вашим чертежам. Габариты: Длина 0,5–15 м; ширина ленты 100–1200 мм; скорость 1–75 м/мин; привод 0,18–7,5 кВт. Материал: Оцинкованная / нержавеющая сталь; лента ПВХ пищевая или резинотканевая. Опции: Гофроборт 20–100 мм; перегородки; частотный преобразователь; поддерживающие ролики; направляющие. Применение: Пищёвка (мясо, рыба, овощи), кондитерка, склады, машиностроение, фармацевтика, бытовая химия. Срок изготовления от 10 рабочих дней, гарантия 12 месяцев. Изготовление под заказ по вашим размерам.</description>
+        <sales_notes>Цена «от» — точная по конфигурации. Оплата 50/50, доставка ТК по РФ.</sales_notes>
+        <param name="Тип">Ленточный</param>
+        <param name="Габариты / типоразмер">Длина 0,5–15 м; ширина ленты 100–1200 мм; скорость 1–75 м/мин; привод 0,18–7,5 кВт</param>
+        <param name="Материал">Оцинкованная / нержавеющая сталь; лента ПВХ пищевая или резинотканевая</param>
+        <param name="Срок изготовления">от 10 рабочих дней</param>
+        <param name="Гарантия">12 месяцев</param>
+        <param name="Изготовление">Под заказ</param>
+      </offer>
+      <offer id="kron-naklon" available="true">
+        <name>Наклонный ленточный конвейер</name>
+        <vendor>КРОНОС</vendor>
+        <url>https://tpkkronos.ru/product/naklonnyj-lentochnyj-konvejer/</url>
+        <price>55000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://tpkkronos.ru/img/catalog/naklonny.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/naklonny_1.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/naklonny_2.jpg</picture>
+        <description>Перемещение грузов с изменением высоты. Борта и перегородки удерживают груз при подъёме. Под специфику груза и помещения. Габариты: Угол до 45°; высота подъёма до 5000 мм; длина 1–15 м; ширина ленты 100–1200 мм. Материал: Оцинкованная / нержавеющая сталь; лента ПВХ пищевая или резинотканевая. Опции: Борта 20–100 мм; поперечные перегородки; частотник; пищевая ПВХ-лента. Применение: Пищёвка, кондитерка, склады, АПК/зерно, птицефабрики. Срок изготовления от 10 рабочих дней, гарантия 12 месяцев. Изготовление под заказ по вашим размерам.</description>
+        <sales_notes>Цена «от» — точная по конфигурации. Оплата 50/50, доставка ТК по РФ.</sales_notes>
+        <param name="Тип">Ленточный</param>
+        <param name="Габариты / типоразмер">Угол до 45°; высота подъёма до 5000 мм; длина 1–15 м; ширина ленты 100–1200 мм</param>
+        <param name="Материал">Оцинкованная / нержавеющая сталь; лента ПВХ пищевая или резинотканевая</param>
+        <param name="Срок изготовления">от 10 рабочих дней</param>
+        <param name="Гарантия">12 месяцев</param>
+        <param name="Изготовление">Под заказ</param>
+      </offer>
+      <offer id="kron-l" available="true">
+        <name>L-образный конвейер</name>
+        <vendor>КРОНОС</vendor>
+        <url>https://tpkkronos.ru/product/l-obraznyj-konvejer/</url>
+        <price>120000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://tpkkronos.ru/img/catalog/l_obr.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/l_obr_1.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/l_obr_2.jpg</picture>
+        <description>Единое оборудование: горизонтальный участок + наклонный подъём на одном приводе. Заменяет два отдельных конвейера. Габариты: Горизонт. участок от 500 мм + наклонный от 1000 мм; угол до 45°; высота до 5000 мм; ширина 100–1200 мм. Материал: Оцинкованная / нержавеющая сталь. Опции: Один привод на две секции; гофроборт; перегородки; частотник. Применение: Пищёвка, зерно/АПК, склады, упаковочные линии. Срок изготовления от 10 рабочих дней, гарантия 12 месяцев. Изготовление под заказ по вашим размерам.</description>
+        <sales_notes>Цена «от» — точная по конфигурации. Оплата 50/50, доставка ТК по РФ.</sales_notes>
+        <param name="Тип">Ленточный</param>
+        <param name="Габариты / типоразмер">Горизонт. участок от 500 мм + наклонный от 1000 мм; угол до 45°; высота до 5000 мм; ширина 100–1200 мм</param>
+        <param name="Материал">Оцинкованная / нержавеющая сталь</param>
+        <param name="Срок изготовления">от 10 рабочих дней</param>
+        <param name="Гарантия">12 месяцев</param>
+        <param name="Изготовление">Под заказ</param>
+      </offer>
+      <offer id="kron-z" available="true">
+        <name>Z-образный конвейер</name>
+        <vendor>КРОНОС</vendor>
+        <url>https://tpkkronos.ru/product/z-obraznyj-konvejer/</url>
+        <price>150000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://tpkkronos.ru/img/catalog/z_obr.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/z_obr_1.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/z_obr_2.jpg</picture>
+        <description>Горизонтальный ввод → подъём → горизонтальный вывод. Принять груз на одном уровне и подать на линию второго уровня — один конвейер вместо трёх. Габариты: Ниж. горизонт. от 300 мм + наклон от 1000 мм + верх. горизонт. от 300 мм; угол до 45°; подъём до 5000 мм; ширина 100–1200 мм. Материал: Оцинкованная / нержавеющая сталь. Опции: Три секции — один конвейер; перегородки; частотник. Применение: Межэтажная подача на упаковку, пищёвка, склады. Срок изготовления от 10 рабочих дней, гарантия 12 месяцев. Изготовление под заказ по вашим размерам.</description>
+        <sales_notes>Цена «от» — точная по конфигурации. Оплата 50/50, доставка ТК по РФ.</sales_notes>
+        <param name="Тип">Ленточный</param>
+        <param name="Габариты / типоразмер">Ниж. горизонт. от 300 мм + наклон от 1000 мм + верх. горизонт. от 300 мм; угол до 45°; подъём до 5000 мм; ширина 100–1200 мм</param>
+        <param name="Материал">Оцинкованная / нержавеющая сталь</param>
+        <param name="Срок изготовления">от 10 рабочих дней</param>
+        <param name="Гарантия">12 месяцев</param>
+        <param name="Изготовление">Под заказ</param>
+      </offer>
+      <offer id="kron-plast" available="true">
+        <name>Пластинчатый конвейер</name>
+        <vendor>КРОНОС</vendor>
+        <url>https://tpkkronos.ru/product/plastinchatyj-konvejer/</url>
+        <price>85000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>2</categoryId>
+        <picture>https://tpkkronos.ru/img/catalog/plastinch.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/plastinch_1.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/plastinch_2.jpg</picture>
+        <description>Жёсткий настил из пластин на цепном приводе для тяжёлых, влажных и штучных грузов, где лента не подходит. Устойчив к нагрузке, влаге и контакту с тарой. Габариты: Ширина пластин 63,5–305,8 мм; длина от 1000 мм; скорость 1–75 м/мин. Материал: Пластины: сталь / нержавейка / полимер; каркас оцинк./нерж.. Опции: Звёздочки; направляющая под тару; скат; частотник; кожух двигателя. Применение: Линии розлива (стекло, ПЭТ), банки алюминий/жесть, консервы, химия, металлургия. Срок изготовления от 10 рабочих дней, гарантия 12 месяцев. Изготовление под заказ по вашим размерам.</description>
+        <sales_notes>Цена «от» — точная по конфигурации. Оплата 50/50, доставка ТК по РФ.</sales_notes>
+        <param name="Тип">Пластинчатый</param>
+        <param name="Габариты / типоразмер">Ширина пластин 63,5–305,8 мм; длина от 1000 мм; скорость 1–75 м/мин</param>
+        <param name="Материал">Пластины: сталь / нержавейка / полимер; каркас оцинк./нерж.</param>
+        <param name="Срок изготовления">от 10 рабочих дней</param>
+        <param name="Гарантия">12 месяцев</param>
+        <param name="Изготовление">Под заказ</param>
+      </offer>
+      <offer id="kron-rolgang" available="true">
+        <name>Рольганг (роликовый конвейер)</name>
+        <vendor>КРОНОС</vendor>
+        <url>https://tpkkronos.ru/product/rolgang-rolikovyj-konvejer/</url>
+        <price>65000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>3</categoryId>
+        <picture>https://tpkkronos.ru/img/catalog/rolgang.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/rolgang_1.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/rolgang_2.jpg</picture>
+        <description>Роликовый конвейер для грузов с жёстким плоским дном: коробки, ящики, паллеты, поддоны. Приводной (с двигателем) или гравитационный (самотёком). Габариты: Ширина 100–1200 мм; длина от 500 мм; ролики 50/60/76/89 мм; шаг 75–300 мм; нагрузка на ролик до 200 кг. Материал: Ролики: сталь / нержавейка / полиамид; рама сварная или модульная. Опции: Приводной/гравитационный; бортики; регулировка шага роликов. Применение: Склады и логистика, погрузка/разгрузка, буферные зоны, комплектация заказов. Срок изготовления от 10 рабочих дней, гарантия 12 месяцев. Изготовление под заказ по вашим размерам.</description>
+        <sales_notes>Цена «от» — точная по конфигурации. Оплата 50/50, доставка ТК по РФ.</sales_notes>
+        <param name="Тип">Роликовый</param>
+        <param name="Габариты / типоразмер">Ширина 100–1200 мм; длина от 500 мм; ролики 50/60/76/89 мм; шаг 75–300 мм; нагрузка на ролик до 200 кг</param>
+        <param name="Материал">Ролики: сталь / нержавейка / полиамид; рама сварная или модульная</param>
+        <param name="Срок изготовления">от 10 рабочих дней</param>
+        <param name="Гарантия">12 месяцев</param>
+        <param name="Изготовление">Под заказ</param>
+      </offer>
+      <offer id="kron-stol" available="true">
+        <name>Накопительный стол</name>
+        <vendor>КРОНОС</vendor>
+        <url>https://tpkkronos.ru/product/nakopitelnyj-stol/</url>
+        <price>90000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>4</categoryId>
+        <picture>https://tpkkronos.ru/img/catalog/acc_table.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/acc_table_1.jpg</picture>
+        <picture>https://tpkkronos.ru/img/catalog/acc_table_2.jpg</picture>
+        <description>Вращающийся стол с приводом и регулировкой оборотов. Буфер между операциями: накопление, сортировка, ручная обработка изделий. Габариты: Радиус столешницы от 800 мм; борт 50 мм; привод 0,18 кВт; регулировка оборотов. Материал: Столешница нержавеющая сталь; каркас СТ3, металл 3 мм. Опции: Увеличенный радиус; регулируемый борт; усиленный каркас; полностью нержавеющее исполнение. Применение: Пищёвка, фасовка, сортировка, буфер перед упаковкой/маркировкой. Срок изготовления 15–20 рабочих дней, гарантия 12 месяцев. Изготовление под заказ по вашим размерам.</description>
+        <sales_notes>Цена «от» — точная по конфигурации. Оплата 50/50, доставка ТК по РФ.</sales_notes>
+        <param name="Тип">Буферное</param>
+        <param name="Габариты / типоразмер">Радиус столешницы от 800 мм; борт 50 мм; привод 0,18 кВт; регулировка оборотов</param>
+        <param name="Материал">Столешница нержавеющая сталь; каркас СТ3, металл 3 мм</param>
+        <param name="Срок изготовления">15–20 рабочих дней</param>
+        <param name="Гарантия">12 месяцев</param>
+        <param name="Изготовление">Под заказ</param>
+      </offer>
+    </offers>
+  </shop>
+</yml_catalog>

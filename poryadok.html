@@ -39,7 +39,8 @@
   @media(min-width:500px){ #phone{border-radius:36px; border:1px solid #2a2a2a; height:92vh;} }
 
   header{
-    padding:18px 20px 10px; display:flex; justify-content:space-between; align-items:flex-end;
+    padding:calc(14px + env(safe-area-inset-top, 0px)) 20px 10px;
+    display:flex; justify-content:space-between; align-items:flex-end; gap:10px;
   }
   header h1{font-size:24px; font-weight:700;}
   header .sub{color:var(--muted); font-size:13px; margin-top:2px;}
@@ -49,7 +50,9 @@
 
   /* ---- вкладки снизу ---- */
   nav{
-    position:absolute; bottom:0; left:0; right:0; height:64px;
+    position:absolute; bottom:0; left:0; right:0;
+    height:calc(64px + env(safe-area-inset-bottom, 0px));
+    padding-bottom:env(safe-area-inset-bottom, 0px);
     background:rgba(20,23,29,.96); backdrop-filter:blur(10px);
     border-top:1px solid var(--line); display:flex; z-index:30;
   }
@@ -62,14 +65,10 @@
 
   /* ---- FAB ---- */
   #fab{
-    position:absolute; right:18px; bottom:84px; width:58px; height:58px; border-radius:50%;
+    position:absolute; right:18px; bottom:calc(84px + env(safe-area-inset-bottom, 0px));
+    width:58px; height:58px; border-radius:50%;
     background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; font-size:30px;
     border:none; box-shadow:0 6px 20px rgba(91,140,255,.45); cursor:pointer; z-index:31;
-  }
-  #mic-fab{
-    position:absolute; right:26px; bottom:154px; width:42px; height:42px; border-radius:50%;
-    background:var(--card); border:1px solid var(--line); font-size:17px;
-    box-shadow:0 4px 14px rgba(0,0,0,.3); cursor:pointer; z-index:31;
   }
 
   .screen{display:none;}
@@ -110,7 +109,7 @@
   .empty{color:var(--muted); text-align:center; padding:30px 10px; font-size:14px;}
 
   /* ---- календарь ---- */
-  .weekstrip{display:flex; gap:6px; margin:8px 0 14px;}
+  .weekstrip{display:flex; gap:6px; margin:8px 0 14px; touch-action:pan-y; user-select:none; -webkit-user-select:none;}
   .day{
     flex:1; background:var(--card); border-radius:12px; padding:8px 0; text-align:center; cursor:pointer;
     border:1px solid transparent;
@@ -235,8 +234,13 @@
   }
   #sheet{
     position:absolute; left:0; right:0; bottom:-100%; z-index:41;
-    background:var(--card2); border-radius:24px 24px 0 0; padding:18px 18px 26px;
-    transition:bottom .25s ease;
+    background:var(--card2); border-radius:24px 24px 0 0;
+    padding:18px 18px calc(26px + env(safe-area-inset-bottom, 0px));
+    transition:bottom .25s ease; max-height:88%; overflow-y:auto;
+  }
+  #sheet-close{
+    width:34px; height:34px; border:none; border-radius:50%;
+    background:var(--card); color:var(--muted); font-size:16px; cursor:pointer;
   }
   #sheet.up{bottom:0;}
   #sheet h3{font-size:16px; margin-bottom:12px;}
@@ -271,6 +275,21 @@
     font-size:14px; padding:14px 6px; border-radius:14px; cursor:pointer;
   }
   #parsed{font-size:12px; color:var(--green); margin-top:8px; min-height:16px;}
+
+  /* подтверждение */
+  #confirm-bg{
+    position:absolute; inset:0; background:rgba(0,0,0,.6); z-index:60;
+    display:none; align-items:center; justify-content:center; padding:30px;
+  }
+  #confirm-box{
+    background:var(--card2); border-radius:20px; padding:20px; width:100%; max-width:320px;
+  }
+  #confirm-text{font-size:15px; line-height:1.45;}
+  .cf-btn{
+    flex:1; border:none; border-radius:12px; padding:12px; font-size:15px; cursor:pointer;
+    background:var(--card); color:var(--text);
+  }
+  .cf-btn.danger{background:var(--red); color:#fff; font-weight:600;}
 
   /* тост */
   #toast{
@@ -338,7 +357,6 @@
   </main>
 
   <button id="fab" onclick="openSheet()">+</button>
-  <button id="mic-fab" onclick="openSheet();setTimeout(voiceInput,350)" title="Задача голосом">🎤</button>
 
   <nav>
     <button class="active" data-s="today" onclick="go('today',this)"><span class="ico">☀️</span>Сегодня</button>
@@ -350,7 +368,10 @@
   <!-- шторка быстрого добавления -->
   <div id="sheet-bg" onclick="closeSheet()"></div>
   <div id="sheet">
-    <h3 id="sheet-title">Новая задача</h3>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
+      <h3 id="sheet-title" style="margin:0">Новая задача</h3>
+      <button id="sheet-close" onclick="closeSheet()" title="Закрыть без сохранения">✕</button>
+    </div>
     <div class="input-row">
       <input id="q-input" placeholder="Например: завтра в 18:00 позвонить маме" oninput="parseNL()">
       <button id="mic-btn" onclick="voiceInput()" title="Сказать голосом">🎤</button>
@@ -394,6 +415,8 @@
       <div class="chip" data-rep="d">Каждый день</div>
       <div class="chip" data-rep="w">Каждую неделю</div>
       <div class="chip" data-rep="m">Каждый месяц</div>
+      <div class="chip" data-rep="q">Каждый квартал</div>
+      <div class="chip" data-rep="y">Каждый год</div>
     </div>
     <div class="row-label" id="proj-label">Куда</div>
     <div class="chips" id="proj-chips"></div>
@@ -401,6 +424,17 @@
     <div class="sheet-btns">
       <button id="del-btn" onclick="deleteTask()" style="display:none">🗑 Удалить</button>
       <button id="add-btn" onclick="addTask()">Добавить</button>
+    </div>
+  </div>
+
+  <!-- подтверждение удаления -->
+  <div id="confirm-bg" onclick="hideConfirm()">
+    <div id="confirm-box" onclick="event.stopPropagation()">
+      <div id="confirm-text"></div>
+      <div style="display:flex; gap:8px; margin-top:14px">
+        <button class="cf-btn" onclick="hideConfirm()">Отмена</button>
+        <button class="cf-btn danger" id="confirm-yes">Удалить</button>
+      </div>
     </div>
   </div>
 
@@ -434,6 +468,7 @@ function go(s, btn){
   document.getElementById('scr-'+s).classList.add('active');
   document.getElementById('scr-title').textContent = titles[s][0];
   document.getElementById('scr-sub').textContent = titles[s][1]();
+  document.getElementById('fab').style.display = (s==='more') ? 'none' : 'block';
   if(s==='today') renderToday();
   if(s==='cal') renderCal();
   if(s==='proj'){ curProj=null; renderProjects(); }
@@ -449,7 +484,7 @@ function bellMeta(t){
   if(t.remPersist) s+=' · 🔁';
   return '<span class="bell">'+s+'</span>';
 }
-const REP_NAMES={d:'каждый день', w:'каждую неделю', m:'каждый месяц'};
+const REP_NAMES={d:'каждый день', w:'каждую неделю', m:'каждый месяц', q:'каждый квартал', y:'каждый год'};
 function commonMeta(t, title){
   let meta = [];
   const overdue = t.date < iso(today) && !t.done;
@@ -508,6 +543,8 @@ function nextRepeatDate(t){
   if(t.repeat==='d') dt.setDate(dt.getDate()+1);
   if(t.repeat==='w') dt.setDate(dt.getDate()+7);
   if(t.repeat==='m') dt.setMonth(dt.getMonth()+1);
+  if(t.repeat==='q') dt.setMonth(dt.getMonth()+3);
+  if(t.repeat==='y') dt.setFullYear(dt.getFullYear()+1);
   return iso(dt);
 }
 function toggle(id){
@@ -544,8 +581,10 @@ function monthGridHTML(y,m,selISO,pickFn,navFn){
 
 // ===================== календарь =====================
 let selDay = iso(today);
+let weekOffset=0;
 let calExpanded=false, calY=today.getFullYear(), calM=today.getMonth();
 function toggleMonth(){
+  if(!calExpanded && weekOffset!==0){ weekOffset=0; selDay=iso(today); renderCal(); return; }
   calExpanded=!calExpanded;
   if(calExpanded){ const dt=fromISO(selDay); calY=dt.getFullYear(); calM=dt.getMonth(); }
   renderCal();
@@ -560,12 +599,12 @@ function renderCal(){
     ex.textContent='Свернуть до недели ▴';
   } else {
     ws.style.display='flex'; mw.style.display='none';
-    ex.textContent='Развернуть месяц ▾';
+    ex.textContent = weekOffset!==0 ? '⟲ Вернуться к этой неделе' : 'Развернуть месяц ▾';
     let h='';
     for(let i=0;i<7;i++){
-      const dt=d(i), key=iso(dt);
+      const dt=d(weekOffset*7+i), key=iso(dt);
       const cnt = openCount(key);
-      h+=`<div class="day ${key===selDay?'sel':''} ${i===0?'today':''}" onclick="calPick('${key}')">
+      h+=`<div class="day ${key===selDay?'sel':''} ${key===iso(today)?'today':''}" onclick="calPick('${key}')">
         <div class="dw">${DAYS_RU[dt.getDay()]}</div><div class="dn">${dt.getDate()}</div>
         <div class="dots">${'•'.repeat(Math.min(cnt,3))}</div></div>`;
     }
@@ -666,6 +705,13 @@ function renderProjects(){
     }).join('') +
     (newStageMode ? inlineRow('confirmNewStage') : `<div class="stage-add" onclick="startNewStage()">＋ новый этап</div>`);
 }
+// подтверждение удаления
+function askConfirm(text, fn){
+  document.getElementById('confirm-text').textContent=text;
+  document.getElementById('confirm-yes').onclick=()=>{ hideConfirm(); fn(); };
+  document.getElementById('confirm-bg').style.display='flex';
+}
+function hideConfirm(){ document.getElementById('confirm-bg').style.display='none'; }
 // проекты: завершить / переименовать / удалить из списка
 function toggleProjDone(pid){
   const p=projects.find(x=>x.id===pid);
@@ -674,10 +720,13 @@ function toggleProjDone(pid){
   toast(p.done?'Проект завершён 🎉':'Проект возвращён в работу ↩');
 }
 function deleteProjById(pid){
-  projects = projects.filter(x=>x.id!==pid);
-  resetPEdits();
-  rerenderAll();
-  toast('Проект удалён 🗑');
+  const p=projects.find(x=>x.id===pid); if(!p) return;
+  askConfirm('Удалить проект «'+p.name+'» со всеми задачами? Это действие нельзя отменить.', ()=>{
+    projects = projects.filter(x=>x.id!==pid);
+    resetPEdits();
+    rerenderAll();
+    toast('Проект удалён 🗑');
+  });
 }
 function startListRename(pid){
   resetPEdits(); projListEdit=pid; renderProjects();
@@ -707,10 +756,13 @@ function confirmProjRename(){
   cancelPEdits(); renderWidgets();
 }
 function deleteProject(){
-  projects = projects.filter(x=>x.id!==curProj);
-  curProj=null; resetPEdits();
-  renderProjects(); renderWidgets(); renderToday(); renderCal();
-  toast('Проект удалён 🗑');
+  const p=projects.find(x=>x.id===curProj); if(!p) return;
+  askConfirm('Удалить проект «'+p.name+'» со всеми задачами? Это действие нельзя отменить.', ()=>{
+    projects = projects.filter(x=>x.id!==p.id);
+    curProj=null; resetPEdits();
+    renderProjects(); renderWidgets(); renderToday(); renderCal();
+    toast('Проект удалён 🗑');
+  });
 }
 // этапы: создать / переименовать / удалить
 function startNewStage(){ resetPEdits(); newStageMode=true; renderProjects(); focusRen(''); }
@@ -1109,6 +1161,24 @@ function toast(msg){
   t.textContent=msg; t.classList.add('show');
   clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200);
 }
+
+// ===================== свайпы по полосе недели =====================
+// влево — следующая неделя, вправо — предыдущая
+(function(){
+  const ws=document.getElementById('weekstrip');
+  let x0=null, dx=0;
+  ws.addEventListener('pointerdown', e=>{ x0=e.clientX; dx=0; });
+  ws.addEventListener('pointermove', e=>{ if(x0!==null) dx=e.clientX-x0; });
+  function end(){
+    if(x0===null) return;
+    if(Math.abs(dx)>10) swSuppress=true;
+    if(dx<-45){ weekOffset++; renderCal(); }
+    else if(dx>45){ weekOffset--; renderCal(); }
+    x0=null; dx=0;
+  }
+  ws.addEventListener('pointerup', end);
+  ws.addEventListener('pointercancel', ()=>{ x0=null; dx=0; });
+})();
 
 // ===================== свайпы по задачам =====================
 // вправо — выполнено, влево — открыть действия (перенести/удалить)

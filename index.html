@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Порядок">
+<meta name="theme-color" content="#0f1115">
+<title>Порядок — прототип органайзера</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#1a1d24; --card2:#22262f; --line:#2c313c;
+    --text:#e8eaf0; --muted:#8b93a3; --accent:#5b8cff; --accent2:#7c5bff;
+    --green:#3ecf8e; --red:#ff6b6b; --amber:#ffb84d;
+    --radius:16px;
+  }
+  /* светлая тема */
+  #phone.light{
+    --bg:#f2f4f8; --card:#ffffff; --card2:#e9edf4; --line:#dde3ec;
+    --text:#1b1f27; --muted:#69717f;
+  }
+  #phone.light nav{background:rgba(255,255,255,.96);}
+  #phone.light .widget{background:linear-gradient(150deg,#ffffff,#eef2fa); color:var(--text); box-shadow:0 8px 24px rgba(60,80,120,.14);}
+  #phone.light #toast{background:#3a4152;}
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:#000; display:flex; justify-content:center; align-items:center;
+  }
+  /* «телефон» на десктопе, на мобиле — во весь экран */
+  #phone{
+    width:100%; max-width:420px; height:100vh; max-height:920px;
+    background:var(--bg); color:var(--text); position:relative; overflow:hidden;
+    display:flex; flex-direction:column;
+  }
+  @media(min-width:500px){ #phone{border-radius:36px; border:1px solid #2a2a2a; height:92vh;} }
+
+  header{
+    padding:18px 20px 10px; display:flex; justify-content:space-between; align-items:flex-end;
+  }
+  header h1{font-size:24px; font-weight:700;}
+  header .sub{color:var(--muted); font-size:13px; margin-top:2px;}
+  .proto-badge{font-size:10px; color:var(--muted); border:1px solid var(--line); border-radius:8px; padding:3px 7px;}
+
+  main{flex:1; overflow-y:auto; padding:6px 16px 120px;}
+
+  /* ---- вкладки снизу ---- */
+  nav{
+    position:absolute; bottom:0; left:0; right:0; height:64px;
+    background:rgba(20,23,29,.96); backdrop-filter:blur(10px);
+    border-top:1px solid var(--line); display:flex; z-index:30;
+  }
+  nav button{
+    flex:1; background:none; border:none; color:var(--muted); font-size:11px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer;
+  }
+  nav button .ico{font-size:20px;}
+  nav button.active{color:var(--accent);}
+
+  /* ---- FAB ---- */
+  #fab{
+    position:absolute; right:18px; bottom:84px; width:58px; height:58px; border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; font-size:30px;
+    border:none; box-shadow:0 6px 20px rgba(91,140,255,.45); cursor:pointer; z-index:31;
+  }
+  #mic-fab{
+    position:absolute; right:26px; bottom:154px; width:42px; height:42px; border-radius:50%;
+    background:var(--card); border:1px solid var(--line); font-size:17px;
+    box-shadow:0 4px 14px rgba(0,0,0,.3); cursor:pointer; z-index:31;
+  }
+
+  .screen{display:none;}
+  .screen.active{display:block;}
+
+  h2.section{font-size:13px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); margin:18px 4px 8px;}
+
+  /* ---- задачи ---- */
+  .task{
+    background:var(--card); border-radius:var(--radius); padding:12px 14px; margin-bottom:8px;
+    display:flex; gap:12px; align-items:flex-start; border:1px solid transparent;
+    position:relative; touch-action:pan-y; transition:transform .15s;
+    user-select:none; -webkit-user-select:none;
+  }
+  .t-swipe-act{
+    position:absolute; right:10px; top:50%; transform:translateY(-50%);
+    display:none; gap:6px; z-index:2;
+  }
+  .task.swiped .t-swipe-act{display:flex;}
+  .sw-btn{border:none; border-radius:10px; padding:8px 10px; font-size:12px; cursor:pointer; background:var(--card2); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.35);}
+  .sw-btn.danger{color:var(--red);}
+  .ov-act{display:flex; gap:6px; margin-top:7px;}
+  .ov-act button{border:1px solid var(--line); background:var(--card2); color:var(--text); border-radius:10px; padding:5px 10px; font-size:12px; cursor:pointer;}
+  .task.overdue{border-color:rgba(255,107,107,.35);}
+  .chk{
+    width:24px; height:24px; min-width:24px; border-radius:50%; border:2px solid var(--muted);
+    cursor:pointer; margin-top:1px; display:flex; align-items:center; justify-content:center; font-size:14px; color:#fff;
+    transition:.15s;
+  }
+  .task.done .chk{background:var(--green); border-color:var(--green);}
+  .task.done .t-title{text-decoration:line-through; color:var(--muted);}
+  .t-body{flex:1;}
+  .t-title{font-size:15px; line-height:1.35;}
+  .t-meta{font-size:12px; color:var(--muted); margin-top:3px; display:flex; gap:10px; flex-wrap:wrap;}
+  .t-meta .urgent{color:var(--red);}
+  .t-meta .proj{color:var(--accent);}
+  .t-meta .bell{color:var(--amber);}
+  .empty{color:var(--muted); text-align:center; padding:30px 10px; font-size:14px;}
+
+  /* ---- календарь ---- */
+  .weekstrip{display:flex; gap:6px; margin:8px 0 14px;}
+  .day{
+    flex:1; background:var(--card); border-radius:12px; padding:8px 0; text-align:center; cursor:pointer;
+    border:1px solid transparent;
+  }
+  .day .dw{font-size:10px; color:var(--muted); text-transform:uppercase;}
+  .day .dn{font-size:16px; font-weight:600; margin-top:2px;}
+  .day .dots{height:6px; margin-top:3px; font-size:8px; color:var(--accent); letter-spacing:1px;}
+  .day.sel{border-color:var(--accent); background:rgba(91,140,255,.12);}
+  .day.today .dn{color:var(--accent);}
+
+  /* ---- проекты ---- */
+  .proj-card{
+    background:var(--card); border-radius:var(--radius); padding:14px; margin-bottom:10px; cursor:pointer;
+  }
+  .proj-card .p-head{display:flex; justify-content:space-between; align-items:center;}
+  .proj-card .p-name{font-size:16px; font-weight:600;}
+  .proj-card .p-pct{font-size:13px; color:var(--accent); font-weight:600;}
+  .bar{height:6px; background:var(--card2); border-radius:3px; margin-top:10px; overflow:hidden;}
+  .bar i{display:block; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:3px; transition:.3s;}
+  .p-next{font-size:12px; color:var(--muted); margin-top:8px;}
+
+  .back{background:none; border:none; color:var(--accent); font-size:14px; cursor:pointer; padding:6px 0; margin-bottom:4px;}
+  .stage{background:var(--card); border-radius:var(--radius); margin-bottom:10px; overflow:hidden;}
+  .stage-head{padding:12px 14px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;}
+  .stage-head .s-name{font-weight:600; font-size:14px;}
+  .stage-head .s-cnt{font-size:12px; color:var(--muted);}
+  .stage-body{border-top:1px solid var(--line); padding:6px 14px 10px; display:none;}
+  .stage.open .stage-body{display:block;}
+  .sub-t{display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:1px solid var(--line);}
+  .sub-t:last-child{border-bottom:none;}
+  .sub-t .chk{width:20px; height:20px; min-width:20px; font-size:11px;}
+  .sub-t.done span{text-decoration:line-through; color:var(--muted);}
+  .sub-t span{font-size:14px; line-height:1.4; flex:1;}
+  .add-sub{
+    margin-left:auto; background:var(--card2); border:none; color:var(--muted);
+    width:26px; height:26px; min-width:26px; border-radius:8px; cursor:pointer; font-size:15px; line-height:1;
+  }
+  .sub-add-row{display:flex; gap:6px; padding:6px 0 8px;}
+  .sub-add-row input{flex:1; min-width:0; background:var(--bg); border:1px solid var(--accent); border-radius:10px; color:var(--text); padding:8px 10px; font-size:14px; outline:none;}
+  .sub-add-row button{background:var(--accent); border:none; color:#fff; border-radius:10px; width:36px; cursor:pointer; font-size:14px;}
+  .sub-add-row button.cancel{background:var(--card2); color:var(--muted);}
+  .stage-add{color:var(--accent); font-size:13px; padding:8px 0 2px; cursor:pointer;}
+
+  /* ---- «ещё»: виджеты и уведомления ---- */
+  .widget{
+    border-radius:20px; padding:14px; margin-bottom:14px; color:#fff;
+    background:linear-gradient(150deg,#232a3a,#1a1f2b); border:1px solid var(--line);
+    box-shadow:0 8px 24px rgba(0,0,0,.35);
+  }
+  .widget h4{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin-bottom:8px;}
+  .w-task{display:flex; align-items:center; gap:8px; font-size:13px; padding:4px 0;}
+  .w-task i{width:14px; height:14px; border:1.5px solid var(--muted); border-radius:50%; display:inline-block;}
+  .w-task.wdone i{background:var(--green); border-color:var(--green);}
+  .w-task.wdone{color:var(--muted); text-decoration:line-through;}
+  .w-note{font-size:11px; color:var(--muted); margin:-6px 0 16px 4px;}
+  /* сегментированный переключатель темы */
+  .seg{display:flex; background:var(--card); border-radius:14px; padding:4px; margin-bottom:8px;}
+  .seg button{flex:1; border:none; background:none; color:var(--muted); font-size:13px; padding:9px 0; border-radius:10px; cursor:pointer;}
+  .seg button.active{background:var(--accent); color:#fff;}
+
+  /* мини-календарь на месяц */
+  .mini-cal{background:var(--card); border-radius:16px; padding:12px; margin-bottom:12px;}
+  .mc-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+  .mc-head b{font-size:14px; text-transform:capitalize;}
+  .mc-head button{background:var(--card2); border:none; color:var(--text); width:32px; height:32px; border-radius:10px; cursor:pointer; font-size:15px;}
+  .mc-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:2px; text-align:center;}
+  .mc-grid .dw{font-size:10px; color:var(--muted); padding:4px 0; text-transform:uppercase;}
+  .mc-d{padding:8px 0 10px; border-radius:10px; font-size:13px; cursor:pointer; position:relative;}
+  .mc-d.other{color:var(--muted); opacity:.4;}
+  .mc-d.today{color:var(--accent); font-weight:700;}
+  .mc-d.sel{background:var(--accent); color:#fff;}
+  .mc-d .mdot{position:absolute; left:0; right:0; bottom:2px; font-size:7px; color:var(--accent); line-height:1;}
+  .mc-d.sel .mdot{color:#fff;}
+  #note-input{
+    width:100%; background:var(--bg); border:1px solid var(--line); border-radius:14px;
+    color:var(--text); font-size:14px; padding:10px 14px; margin:2px 0 8px; outline:none;
+    resize:none; font-family:inherit;
+  }
+  #note-input:focus{border-color:var(--accent);}
+  #time-slider-box{
+    background:var(--bg); border:1px solid var(--line); border-radius:14px;
+    padding:10px 14px 6px; margin-bottom:6px; display:none;
+  }
+  #time-slider{
+    width:100%; accent-color:var(--accent); height:28px; cursor:pointer; margin:0;
+  }
+
+  .w-plus{
+    width:30px; height:30px; border-radius:50%; border:none; cursor:pointer;
+    background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; font-size:18px; line-height:1;
+  }
+  .w-plus.w-mic{background:var(--card2); font-size:13px;}
+  .w-carousel{
+    display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:10px;
+    margin-bottom:6px; scrollbar-width:none;
+  }
+  .w-carousel::-webkit-scrollbar{display:none;}
+  .w-carousel .widget{min-width:100%; scroll-snap-align:center; margin-bottom:0;}
+  .w-dots{text-align:center; color:var(--muted); font-size:9px; letter-spacing:5px; margin-bottom:12px;}
+  .notif{
+    background:var(--card); border-radius:14px; padding:12px 14px; margin-bottom:8px; font-size:13px;
+    display:flex; gap:10px; align-items:flex-start;
+  }
+  .notif .n-ico{font-size:18px;}
+  .notif b{display:block; font-size:13px;}
+  .notif small{color:var(--muted);}
+  .toggle-row{display:flex; justify-content:space-between; align-items:center; background:var(--card); border-radius:14px; padding:12px 14px; margin-bottom:8px; font-size:14px;}
+  .tg{width:44px; height:26px; border-radius:13px; background:var(--card2); position:relative; cursor:pointer; transition:.2s;}
+  .tg::after{content:''; position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:var(--muted); transition:.2s;}
+  .tg.on{background:var(--accent);}
+  .tg.on::after{left:21px; background:#fff;}
+
+  /* ---- шторка добавления ---- */
+  #sheet-bg{
+    position:absolute; inset:0; background:rgba(0,0,0,.55); z-index:40; display:none;
+  }
+  #sheet{
+    position:absolute; left:0; right:0; bottom:-100%; z-index:41;
+    background:var(--card2); border-radius:24px 24px 0 0; padding:18px 18px 26px;
+    transition:bottom .25s ease;
+  }
+  #sheet.up{bottom:0;}
+  #sheet h3{font-size:16px; margin-bottom:12px;}
+  #q-input{
+    width:100%; background:var(--bg); border:1px solid var(--line); border-radius:14px;
+    color:var(--text); font-size:16px; padding:13px 14px; outline:none;
+  }
+  #q-input:focus{border-color:var(--accent);}
+  .input-row{display:flex; gap:8px;}
+  #mic-btn{
+    width:50px; min-width:50px; height:50px; border-radius:14px; border:1px solid var(--line);
+    background:var(--card); font-size:20px; cursor:pointer;
+  }
+  #mic-btn.rec{background:var(--red); border-color:var(--red); animation:pulse 1s infinite;}
+  @keyframes pulse{50%{opacity:.55;}}
+  .hint{font-size:11px; color:var(--muted); margin:6px 2px 12px;}
+  .chips{display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; margin-bottom:10px;}
+  .chips::-webkit-scrollbar{display:none;}
+  .chip{
+    white-space:nowrap; border:1px solid var(--line); background:var(--card); color:var(--text);
+    border-radius:20px; padding:8px 14px; font-size:13px; cursor:pointer;
+  }
+  .chip.sel{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .row-label{font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); margin:10px 2px 6px;}
+  .sheet-btns{display:flex; gap:8px; margin-top:14px;}
+  #add-btn{
+    flex:2; background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border:none; color:#fff; font-size:16px; font-weight:600; padding:14px; border-radius:14px; cursor:pointer;
+  }
+  #del-btn{
+    flex:1; background:var(--card); border:1px solid var(--line); color:var(--red);
+    font-size:14px; padding:14px 6px; border-radius:14px; cursor:pointer;
+  }
+  #parsed{font-size:12px; color:var(--green); margin-top:8px; min-height:16px;}
+
+  /* тост */
+  #toast{
+    position:absolute; left:50%; transform:translateX(-50%); bottom:150px; z-index:50;
+    background:#2c3140; color:#fff; padding:10px 18px; border-radius:20px; font-size:13px;
+    opacity:0; transition:.3s; pointer-events:none; white-space:nowrap;
+  }
+  #toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div id="phone">
+  <header>
+    <div>
+      <h1 id="scr-title">Сегодня</h1>
+      <div class="sub" id="scr-sub"></div>
+    </div>
+    <div class="proto-badge">прототип</div>
+  </header>
+
+  <main>
+    <!-- СЕГОДНЯ -->
+    <section class="screen active" id="scr-today"></section>
+
+    <!-- КАЛЕНДАРЬ -->
+    <section class="screen" id="scr-cal">
+      <div class="weekstrip" id="weekstrip"></div>
+      <div id="monthwrap" style="display:none"></div>
+      <button class="back" id="cal-expand" onclick="toggleMonth()" style="margin:0 0 8px">Развернуть месяц ▾</button>
+      <div id="cal-list"></div>
+    </section>
+
+    <!-- ПРОЕКТЫ -->
+    <section class="screen" id="scr-proj"></section>
+
+    <!-- ЕЩЁ -->
+    <section class="screen" id="scr-more">
+      <h2 class="section">Так будут выглядеть виджеты</h2>
+      <div class="w-carousel" id="car-days"></div>
+      <div class="w-dots" id="dots-days"></div>
+      <div class="w-note">Виджет «Дни»: листай вправо-влево — сегодня, завтра, послезавтра. Чекбоксы, «+» и 🎤 работают прямо с главного экрана</div>
+      <div class="w-carousel" id="car-projs"></div>
+      <div class="w-dots" id="dots-projs"></div>
+      <div class="w-note">Виджет «Проекты»: листай между проектами — сколько осталось и следующий шаг; «+» добавляет задачу сразу в проект</div>
+
+      <h2 class="section">Умные уведомления</h2>
+      <div class="notif"><div class="n-ico">🔔</div><div><b>Через 30 минут: Позвонить в банк</b><small>предварительное напоминание</small></div></div>
+      <div class="notif"><div class="n-ico">🔁</div><div><b>Всё ещё не сделано: Оплатить интернет</b><small>настойчивый режим — повтор каждые 15 мин, пока не отметишь</small></div></div>
+      <div class="notif"><div class="n-ico">🌙</div><div><b>Завтра 4 дела. Главное: сдать отчёт к 12:00</b><small>вечерняя сводка в 21:00</small></div></div>
+
+      <h2 class="section">Тема оформления</h2>
+      <div class="seg" id="theme-seg">
+        <button data-th="light" onclick="setTheme('light')">☀️ Светлая</button>
+        <button data-th="dark" class="active" onclick="setTheme('dark')">🌙 Тёмная</button>
+        <button data-th="auto" onclick="setTheme('auto')">📱 Авто</button>
+      </div>
+      <div class="w-note">«Авто» подстраивается под системную тему телефона (день/ночь)</div>
+
+      <h2 class="section">Настройки (демо)</h2>
+      <div class="toggle-row">Настойчивые напоминания <div class="tg on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row">Вечерняя сводка в 21:00 <div class="tg on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row">Утренняя сводка в 8:00 <div class="tg" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row">Тихие часы 23:00–7:00 <div class="tg on" onclick="this.classList.toggle('on')"></div></div>
+    </section>
+  </main>
+
+  <button id="fab" onclick="openSheet()">+</button>
+  <button id="mic-fab" onclick="openSheet();setTimeout(voiceInput,350)" title="Задача голосом">🎤</button>
+
+  <nav>
+    <button class="active" data-s="today" onclick="go('today',this)"><span class="ico">☀️</span>Сегодня</button>
+    <button data-s="cal" onclick="go('cal',this)"><span class="ico">📅</span>Календарь</button>
+    <button data-s="proj" onclick="go('proj',this)"><span class="ico">📁</span>Проекты</button>
+    <button data-s="more" onclick="go('more',this)"><span class="ico">✨</span>Ещё</button>
+  </nav>
+
+  <!-- шторка быстрого добавления -->
+  <div id="sheet-bg" onclick="closeSheet()"></div>
+  <div id="sheet">
+    <h3 id="sheet-title">Новая задача</h3>
+    <div class="input-row">
+      <input id="q-input" placeholder="Например: завтра в 18:00 позвонить маме" oninput="parseNL()">
+      <button id="mic-btn" onclick="voiceInput()" title="Сказать голосом">🎤</button>
+    </div>
+    <div class="hint">Можно сказать голосом 🎤 — понимаю «сегодня», «завтра», дни недели и время</div>
+    <textarea id="note-input" rows="2" placeholder="📝 Заметка: детали, телефон, адрес, ссылка…"></textarea>
+    <div class="row-label">День</div>
+    <div class="chips" id="date-chips"></div>
+    <div class="mini-cal" id="mc-add" style="display:none"></div>
+    <div class="row-label">Время и напоминание</div>
+    <div class="chips" id="time-chips">
+      <div class="chip" data-t="">Без времени</div>
+      <div class="chip" data-t="09:00">09:00</div>
+      <div class="chip" data-t="12:00">12:00</div>
+      <div class="chip" data-t="18:00">18:00</div>
+      <div class="chip" data-t="custom" id="t-custom">+</div>
+    </div>
+    <div id="time-slider-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:2px 2px 4px">
+        <span class="row-label" style="margin:0">Своё время</span><b id="slider-val" style="font-size:16px;color:var(--accent)">12:00</b>
+      </div>
+      <input type="range" id="time-slider" min="0" max="143" step="1" value="72" oninput="sliderTime(this.value)">
+    </div>
+    <div class="toggle-row" style="margin-top:8px; background:var(--bg)">🔔 Напоминание
+      <div class="tg" id="remind-tg" onclick="toggleRemind()"></div></div>
+    <div id="smart-remind" style="display:none">
+      <div class="row-label">Когда напомнить <span style="text-transform:none;letter-spacing:0">(можно несколько)</span></div>
+      <div class="chips" id="rem-chips">
+        <div class="chip" data-r="start">В момент начала</div>
+        <div class="chip" data-r="5">за 5 мин</div>
+        <div class="chip" data-r="10">за 10 мин</div>
+        <div class="chip" data-r="15">за 15 мин</div>
+        <div class="chip" data-r="30">за 30 мин</div>
+      </div>
+      <div class="toggle-row" style="background:var(--bg)">🔁 Каждые 15 мин, пока не отмечу
+        <div class="tg" id="persist-tg" onclick="togglePersist()"></div></div>
+    </div>
+    <div class="row-label" id="rep-label">Повтор</div>
+    <div class="chips" id="rep-chips">
+      <div class="chip" data-rep="">Нет</div>
+      <div class="chip" data-rep="d">Каждый день</div>
+      <div class="chip" data-rep="w">Каждую неделю</div>
+      <div class="chip" data-rep="m">Каждый месяц</div>
+    </div>
+    <div class="row-label" id="proj-label">Куда</div>
+    <div class="chips" id="proj-chips"></div>
+    <div id="parsed"></div>
+    <div class="sheet-btns">
+      <button id="del-btn" onclick="deleteTask()" style="display:none">🗑 Удалить</button>
+      <button id="add-btn" onclick="addTask()">Добавить</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+// ===================== данные (в памяти) =====================
+const DAYS_RU = ['вс','пн','вт','ср','чт','пт','сб'];
+const DAYS_FULL = {'понедельник':1,'вторник':2,'среда':3,'среду':3,'четверг':4,'пятница':5,'пятницу':5,'суббота':6,'субботу':6,'воскресенье':0,'воскресение':0};
+const today = new Date(); today.setHours(0,0,0,0);
+function d(offset){ const x=new Date(today); x.setDate(x.getDate()+offset); return x; }
+function iso(dt){ return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'); }
+function fromISO(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function fmt(dt){ return dt.getDate()+' '+['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'][dt.getMonth()]; }
+
+let taskId = 100;
+let tasks = [
+  {id:1, title:'Позвонить в банк по карте', date:iso(today), time:'11:00', done:false, remind:true, remStart:true, remBefore:[30], remPersist:true},
+  {id:2, title:'Купить продукты на выходные', date:iso(today), time:'', done:false},
+  {id:3, title:'Оплатить интернет', date:iso(d(-1)), time:'', done:false, urgent:true},
+  {id:4, title:'Тренировка', date:iso(today), time:'19:00', done:true, repeat:'w'},
+  {id:5, title:'Записаться к стоматологу', date:iso(d(1)), time:'10:00', done:false, remind:true, note:'Клиника «Улыбка», тел. 8 495 123-45-67'},
+  {id:6, title:'Забрать посылку', date:iso(d(2)), time:'', done:false},
+];
+let projects = [
+  {id:1, name:'Ремонт кухни', stages:[
+    {name:'Подготовка', open:true, items:[
+      {t:'Составить смету', done:true},
+      {t:'Выбрать материалы', done:false, subs:[
+        {t:'Плитка', done:false, subs:[{t:'Посмотреть в Леруа', done:true},{t:'Сравнить цены онлайн', done:false}]},
+        {t:'Краска', done:true},
+        {t:'Фартук', done:false},
+      ]},
+      {t:'Заказать доставку', done:false, date:iso(d(1)), time:'12:00', remind:true},
+    ]},
+    {name:'Демонтаж', open:false, items:[
+      {t:'Снять старую плитку', done:false},
+      {t:'Демонтировать гарнитур', done:false},
+    ]},
+    {name:'Отделка', open:false, items:[
+      {t:'Выровнять стены', done:false},
+      {t:'Уложить плитку', done:false},
+      {t:'Установить гарнитур', done:false},
+    ]},
+  ]},
+  {id:2, name:'Выпустить приложение', stages:[
+    {name:'Прототип', open:false, items:[
+      {t:'Концепция', done:true},
+      {t:'Прототип интерфейса', done:true},
+      {t:'Утвердить UX', done:false},
+    ]},
+    {name:'Разработка MVP', open:false, items:[
+      {t:'Каркас на Flutter', done:false},
+      {t:'Задачи и быстрое добавление', done:false},
+      {t:'Уведомления', done:false},
+      {t:'Виджеты', done:false},
+    ]},
+  ]},
+];
+
+// ===================== навигация =====================
+const titles = {today:['Сегодня', ()=>fmt(today)+', '+['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'][today.getDay()]],
+                cal:['Календарь', ()=>'план на неделю'],
+                proj:['Проекты', ()=>'большие цели по этапам'],
+                more:['Ещё', ()=>'виджеты и уведомления']};
+let curProj = null;
+function go(s, btn){
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  document.getElementById('scr-'+s).classList.add('active');
+  document.getElementById('scr-title').textContent = titles[s][0];
+  document.getElementById('scr-sub').textContent = titles[s][1]();
+  if(s==='today') renderToday();
+  if(s==='cal') renderCal();
+  if(s==='proj'){ curProj=null; renderProjects(); }
+  if(s==='more') renderWidgets();
+}
+
+// ===================== экран «Сегодня» =====================
+function bellMeta(t){
+  if(!t.remind) return null;
+  let parts=[];
+  if(t.remBefore && t.remBefore.length) parts.push('за '+t.remBefore.join('/')+' мин');
+  let s='🔔 '+(parts.length?parts.join(', '):'напомню');
+  if(t.remPersist) s+=' · 🔁';
+  return '<span class="bell">'+s+'</span>';
+}
+const REP_NAMES={d:'каждый день', w:'каждую неделю', m:'каждый месяц'};
+function commonMeta(t, title){
+  let meta = [];
+  const overdue = t.date < iso(today) && !t.done;
+  if(overdue) meta.push('<span class="urgent">просрочено · '+fmt(fromISO(t.date))+'</span>');
+  if(t.time) meta.push('🕐 '+t.time);
+  const bm=bellMeta(t); if(bm) meta.push(bm);
+  if(t.repeat) meta.push('↻ '+REP_NAMES[t.repeat]);
+  if(t.note) meta.push('📝 '+(t.note.length>28? t.note.slice(0,28)+'…' : t.note));
+  return meta;
+}
+function taskHTML(t){
+  const overdue = t.date < iso(today) && !t.done;
+  let meta = commonMeta(t);
+  if(t.proj) meta.push('<span class="proj">📁 '+t.proj+'</span>');
+  return `<div class="task ${t.done?'done':''} ${overdue?'overdue':''}" data-tid="${t.id}">
+    <div class="chk" onclick="toggle(${t.id})">${t.done?'✓':''}</div>
+    <div class="t-body" onclick="openEdit(${t.id})" style="cursor:pointer"><div class="t-title">${t.title}</div>
+    ${meta.length?'<div class="t-meta">'+meta.join(' ')+'</div>':''}
+    ${overdue?`<div class="ov-act">
+      <button onclick="event.stopPropagation();moveTask(${t.id},0)">→ сегодня</button>
+      <button onclick="event.stopPropagation();moveTask(${t.id},1)">→ завтра</button></div>`:''}</div>
+    <div class="t-swipe-act">
+      <button class="sw-btn" onclick="event.stopPropagation();moveTask(${t.id},1)">→ завтра</button>
+      <button class="sw-btn danger" onclick="event.stopPropagation();swDeleteTask(${t.id})">🗑</button>
+    </div></div>`;
+}
+function moveTask(id,off){
+  const t=tasks.find(x=>x.id===id); if(!t) return;
+  t.date=iso(d(off));
+  rerenderAll();
+  toast('Перенесено на '+(off===0?'сегодня':'завтра')+' ✓');
+}
+function swDeleteTask(id){
+  tasks = tasks.filter(t=>t.id!==id);
+  rerenderAll();
+  toast('Задача удалена 🗑');
+}
+function renderToday(){
+  const el = document.getElementById('scr-today');
+  const pd = datedProjItems();
+  const over = tasks.filter(t=>t.date<iso(today) && !t.done);
+  const overP = pd.filter(x=>x.item.date<iso(today) && !x.item.done);
+  const cur = tasks.filter(t=>t.date===iso(today));
+  const curP = pd.filter(x=>x.item.date===iso(today));
+  const tom = tasks.filter(t=>t.date===iso(d(1)));
+  const tomP = pd.filter(x=>x.item.date===iso(d(1)));
+  let h='';
+  if(over.length+overP.length){ h+='<h2 class="section">Просрочено</h2>'+over.map(taskHTML).join('')+overP.map(projTaskHTML).join(''); }
+  h+='<h2 class="section">Сегодня</h2>';
+  h+= (cur.length+curP.length)? cur.map(taskHTML).join('')+curP.map(projTaskHTML).join('') : '<div class="empty">На сегодня всё сделано 🎉</div>';
+  if(tom.length+tomP.length){ h+='<h2 class="section">Завтра</h2>'+tom.map(taskHTML).join('')+tomP.map(projTaskHTML).join(''); }
+  el.innerHTML=h;
+}
+function nextRepeatDate(t){
+  const dt=fromISO(t.date);
+  if(t.repeat==='d') dt.setDate(dt.getDate()+1);
+  if(t.repeat==='w') dt.setDate(dt.getDate()+7);
+  if(t.repeat==='m') dt.setMonth(dt.getMonth()+1);
+  return iso(dt);
+}
+function toggle(id){
+  const t = tasks.find(x=>x.id===id); if(!t) return;
+  t.done=!t.done;
+  if(t.done && t.repeat){
+    const nd=nextRepeatDate(t);
+    tasks.push({...t, id:++taskId, date:nd, done:false});
+    toast('Готово! Повторится '+fmt(fromISO(nd))+' ↻');
+  } else if(t.done) toast('Готово! 👍');
+  renderToday(); renderCal(); renderWidgets();
+}
+
+// ===================== месячная сетка (общая) =====================
+function monthGridHTML(y,m,selISO,pickFn,navFn){
+  const first=new Date(y,m,1);
+  const name=first.toLocaleDateString('ru-RU',{month:'long',year:'numeric'}).replace(' г.','');
+  const start=(first.getDay()+6)%7; // неделя с понедельника
+  const dim=new Date(y,m+1,0).getDate();
+  function cell(dt,other){
+    const key=iso(dt);
+    const cnt=openCount(key);
+    const cls='mc-d'+(other?' other':'')+(key===iso(today)?' today':'')+(key===selISO?' sel':'');
+    return `<div class="${cls}" onclick="${pickFn}('${key}')">${dt.getDate()}<div class="mdot">${'•'.repeat(Math.min(cnt,3))}</div></div>`;
+  }
+  let h=`<div class="mc-head"><button onclick="${navFn}(-1)">‹</button><b>${name}</b><button onclick="${navFn}(1)">›</button></div><div class="mc-grid">`;
+  ['пн','вт','ср','чт','пт','сб','вс'].forEach(x=>h+=`<div class="dw">${x}</div>`);
+  for(let i=0;i<start;i++) h+=cell(new Date(y,m,i-start+1),true);
+  for(let dd=1;dd<=dim;dd++) h+=cell(new Date(y,m,dd),false);
+  const trail=(7-(start+dim)%7)%7;
+  for(let i=1;i<=trail;i++) h+=cell(new Date(y,m+1,i),true);
+  return h+'</div>';
+}
+
+// ===================== календарь =====================
+let selDay = iso(today);
+let calExpanded=false, calY=today.getFullYear(), calM=today.getMonth();
+function toggleMonth(){
+  calExpanded=!calExpanded;
+  if(calExpanded){ const dt=fromISO(selDay); calY=dt.getFullYear(); calM=dt.getMonth(); }
+  renderCal();
+}
+function calNav(dir){ const x=new Date(calY,calM+dir,1); calY=x.getFullYear(); calM=x.getMonth(); renderCal(); }
+function calPick(key){ selDay=key; renderCal(); }
+function renderCal(){
+  const ws=document.getElementById('weekstrip'), mw=document.getElementById('monthwrap'), ex=document.getElementById('cal-expand');
+  if(calExpanded){
+    ws.style.display='none'; mw.style.display='block';
+    mw.innerHTML='<div class="mini-cal">'+monthGridHTML(calY,calM,selDay,'calPick','calNav')+'</div>';
+    ex.textContent='Свернуть до недели ▴';
+  } else {
+    ws.style.display='flex'; mw.style.display='none';
+    ex.textContent='Развернуть месяц ▾';
+    let h='';
+    for(let i=0;i<7;i++){
+      const dt=d(i), key=iso(dt);
+      const cnt = openCount(key);
+      h+=`<div class="day ${key===selDay?'sel':''} ${i===0?'today':''}" onclick="calPick('${key}')">
+        <div class="dw">${DAYS_RU[dt.getDay()]}</div><div class="dn">${dt.getDate()}</div>
+        <div class="dots">${'•'.repeat(Math.min(cnt,3))}</div></div>`;
+    }
+    ws.innerHTML=h;
+  }
+  const list = tasks.filter(t=>t.date===selDay);
+  const listP = datedProjItems().filter(x=>x.item.date===selDay);
+  const selDt=fromISO(selDay);
+  document.getElementById('cal-list').innerHTML =
+    `<h2 class="section">${selDay===iso(today)?'Сегодня':fmt(selDt)+', '+['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'][selDt.getDay()]}</h2>` +
+    ((list.length+listP.length)? list.map(taskHTML).join('')+listP.map(projTaskHTML).join('') : '<div class="empty">На этот день пока ничего нет.<br>Нажми «+» и выбери день одним тапом</div>');
+}
+
+// ===================== проекты =====================
+function countItem(i){
+  let all=1, done=i.done?1:0;
+  (i.subs||[]).forEach(s=>{ const c=countItem(s); all+=c.all; done+=c.done; });
+  return {all, done};
+}
+function projStats(p){
+  let all=0, done=0;
+  p.stages.forEach(s=>s.items.forEach(i=>{ const c=countItem(i); all+=c.all; done+=c.done; }));
+  return {all, done};
+}
+function firstOpen(i){
+  if(!i.done) return i.t;
+  for(const s of (i.subs||[])){ const r=firstOpen(s); if(r) return r; }
+  return null;
+}
+function nextStep(p){
+  for(const s of p.stages) for(const i of s.items){ const r=firstOpen(i); if(r) return s.name+' → '+r; }
+  return 'Проект завершён 🎉';
+}
+function getItem(stage, path){
+  const idx = path.split('.').map(Number);
+  let it = stage.items[idx[0]];
+  for(let k=1;k<idx.length;k++) it = it.subs[idx[k]];
+  return it;
+}
+// состояния редактирования структуры проектов
+let stageEdit=null, newStageMode=false, newProjMode=false, projRenameMode=false;
+function resetPEdits(){ stageEdit=null; newStageMode=false; newProjMode=false; projRenameMode=false; editTarget=null; }
+function cancelPEdits(){ resetPEdits(); renderProjects(); }
+function inlineRow(confirmFn, delFn){
+  return `<div class="sub-add-row">
+    <input id="ren-input" onkeydown="if(event.key==='Enter')${confirmFn}();if(event.key==='Escape')cancelPEdits()">
+    <button onclick="${confirmFn}()">✓</button>` +
+    (delFn?`<button class="cancel" style="color:var(--red)" onclick="${delFn}()">🗑</button>`:'') +
+    `<button class="cancel" onclick="cancelPEdits()">✕</button></div>`;
+}
+function focusRen(val){
+  setTimeout(()=>{ const el=document.getElementById('ren-input');
+    if(el){ if(val!==undefined){ el.value=val; el.select(); } el.focus(); } },60);
+}
+function renderProjects(){
+  const el=document.getElementById('scr-proj');
+  if(curProj===null){
+    el.innerHTML = projects.map(p=>{
+      const st=projStats(p), left=st.all-st.done;
+      return `<div class="proj-card" onclick="resetPEdits();curProj=${p.id};renderProjects()">
+        <div class="p-head"><div class="p-name">📁 ${p.name}</div><div class="p-pct">${left?('осталось '+left):'готово 🎉'}</div></div>
+        <div class="p-next">Следующий шаг: ${nextStep(p)}</div></div>`;
+    }).join('') +
+    (newProjMode ? inlineRow('confirmNewProj') : `<div class="stage-add" onclick="startNewProj()">＋ новый проект</div>`) +
+    '<div class="w-note" style="margin-top:10px">В список «Сегодня» попадают только задачи проекта, которым ты сам поставил дату</div>';
+    return;
+  }
+  const p = projects.find(x=>x.id===curProj);
+  if(!p){ curProj=null; renderProjects(); return; }
+  const st = projStats(p), left = st.all-st.done;
+  el.innerHTML = `<button class="back" onclick="resetPEdits();curProj=null;renderProjects()">‹ Все проекты</button>
+    <div class="proj-card" style="cursor:default">` +
+      (projRenameMode ? inlineRow('confirmProjRename','deleteProject')
+        : `<div class="p-head"><div class="p-name" onclick="startProjRename()" style="cursor:pointer">📁 ${p.name}</div><div class="p-pct">${left?('осталось '+left):'готово 🎉'}</div></div>`) +
+      `<div class="p-next">Следующий шаг: ${nextStep(p)}</div>
+    </div>` +
+    p.stages.map((s,si)=>{
+      const st2 = s.items.reduce((a,i)=>{const c=countItem(i); a.all+=c.all; a.done+=c.done; return a;}, {all:0,done:0});
+      const head = (stageEdit===si)
+        ? `<div style="padding:10px 14px">${inlineRow('confirmStageRename','deleteStage')}</div>`
+        : `<div class="stage-head" onclick="projects.find(x=>x.id===${p.id}).stages[${si}].open^=1;renderProjects()">
+            <div class="s-name" onclick="event.stopPropagation();startStageRename(${si})">${s.name}</div>
+            <div class="s-cnt">${st2.done}/${st2.all} ▾</div></div>`;
+      return `<div class="stage ${s.open?'open':''}">` + head +
+        `<div class="stage-body">` +
+        s.items.map((i,ii)=>itemHTML(p.id, si, i, String(ii), 0)).join('') +
+        (isEditing(p.id,si,'') ? addRowHTML(p.id,si,'') : `<div class="stage-add" onclick="startAdd(${p.id},${si},'')">＋ задача в этап</div>`) +
+        `</div></div>`;
+    }).join('') +
+    (newStageMode ? inlineRow('confirmNewStage') : `<div class="stage-add" onclick="startNewStage()">＋ новый этап</div>`);
+}
+// проекты: создать / переименовать / удалить
+function startNewProj(){ resetPEdits(); newProjMode=true; renderProjects(); focusRen(''); }
+function confirmNewProj(){
+  const el=document.getElementById('ren-input'); const text=el?el.value.trim():'';
+  if(text){
+    const id=Math.max(0,...projects.map(x=>x.id))+1;
+    projects.push({id, name:text, stages:[{name:'Этап 1', open:1, items:[]}]});
+    toast('Проект «'+text+'» создан ✓');
+  }
+  cancelPEdits(); renderWidgets();
+}
+function startProjRename(){ resetPEdits(); projRenameMode=true; renderProjects(); focusRen(projects.find(x=>x.id===curProj).name); }
+function confirmProjRename(){
+  const el=document.getElementById('ren-input'); const text=el?el.value.trim():'';
+  if(text) projects.find(x=>x.id===curProj).name=text;
+  cancelPEdits(); renderWidgets();
+}
+function deleteProject(){
+  projects = projects.filter(x=>x.id!==curProj);
+  curProj=null; resetPEdits();
+  renderProjects(); renderWidgets(); renderToday(); renderCal();
+  toast('Проект удалён 🗑');
+}
+// этапы: создать / переименовать / удалить
+function startNewStage(){ resetPEdits(); newStageMode=true; renderProjects(); focusRen(''); }
+function confirmNewStage(){
+  const el=document.getElementById('ren-input'); const text=el?el.value.trim():'';
+  if(text) projects.find(x=>x.id===curProj).stages.push({name:text, open:1, items:[]});
+  cancelPEdits();
+}
+function startStageRename(si){ resetPEdits(); stageEdit=si; renderProjects(); focusRen(projects.find(x=>x.id===curProj).stages[si].name); }
+function confirmStageRename(){
+  const el=document.getElementById('ren-input'); const text=el?el.value.trim():'';
+  if(text) projects.find(x=>x.id===curProj).stages[stageEdit].name=text;
+  cancelPEdits(); renderWidgets();
+}
+function deleteStage(){
+  projects.find(x=>x.id===curProj).stages.splice(stageEdit,1);
+  cancelPEdits(); renderWidgets(); renderToday(); renderCal();
+  toast('Этап удалён 🗑');
+}
+// рекурсивный рендер задачи с подзадачами любой глубины
+function itemHTML(pid, si, i, path, level){
+  const m=[];
+  if(i.date) m.push('📅 '+(i.date===iso(today)?'сегодня':fmt(fromISO(i.date))));
+  if(i.time) m.push('🕐 '+i.time);
+  if(i.remind) m.push('🔔');
+  let h = `<div class="sub-t ${i.done?'done':''}" style="margin-left:${level*24}px">
+    <div class="chk" onclick="tgItem(${pid},${si},'${path}')">${i.done?'✓':''}</div>
+    <span onclick="openEditProj(${pid},${si},'${path}')" style="cursor:pointer">${i.t}` +
+    (m.length?`<div class="t-meta" style="font-size:11px;margin-top:2px">${m.join(' · ')}</div>`:'') +
+    `</span>
+    <button class="add-sub" onclick="startAdd(${pid},${si},'${path}')" title="Добавить подзадачу">+</button></div>`;
+  if(isEditing(pid,si,path)) h += `<div style="margin-left:${(level+1)*24}px">${addRowHTML(pid,si,path)}</div>`;
+  (i.subs||[]).forEach((x,xi)=>{ h += itemHTML(pid, si, x, path+'.'+xi, level+1); });
+  return h;
+}
+// задачи проекта с датой попадают в «Сегодня» и календарь
+function datedProjItems(){
+  const out=[];
+  projects.forEach(p=>p.stages.forEach((s,si)=>{
+    const walk=(i,path)=>{
+      if(i.date) out.push({pid:p.id, si, path, item:i, proj:p.name});
+      (i.subs||[]).forEach((x,xi)=>walk(x, path+'.'+xi));
+    };
+    s.items.forEach((i,ii)=>walk(i, String(ii)));
+  }));
+  return out;
+}
+function openCount(key){
+  return tasks.filter(t=>t.date===key && !t.done).length +
+         datedProjItems().filter(x=>x.item.date===key && !x.item.done).length;
+}
+function projTaskHTML(x){
+  const t=x.item;
+  const overdue = t.date < iso(today) && !t.done;
+  let meta = commonMeta(t);
+  meta.push('<span class="proj">📁 '+x.proj+'</span>');
+  const ref=`${x.pid},${x.si},'${x.path}'`;
+  return `<div class="task ${t.done?'done':''} ${overdue?'overdue':''}" data-ref="${x.pid}|${x.si}|${x.path}">
+    <div class="chk" onclick="tgItem(${ref})">${t.done?'✓':''}</div>
+    <div class="t-body" onclick="openEditProj(${ref})" style="cursor:pointer">
+      <div class="t-title">${t.t}</div><div class="t-meta">${meta.join(' ')}</div>
+      ${overdue?`<div class="ov-act">
+        <button onclick="event.stopPropagation();moveProjTask(${ref},0)">→ сегодня</button>
+        <button onclick="event.stopPropagation();moveProjTask(${ref},1)">→ завтра</button></div>`:''}</div>
+    <div class="t-swipe-act">
+      <button class="sw-btn" onclick="event.stopPropagation();moveProjTask(${ref},1)">→ завтра</button>
+      <button class="sw-btn danger" onclick="event.stopPropagation();delProjItem(${ref});toast('Задача удалена 🗑')">🗑</button>
+    </div></div>`;
+}
+function moveProjTask(pid,si,path,off){
+  getItem(projects.find(x=>x.id===pid).stages[si],path).date=iso(d(off));
+  rerenderAll();
+  toast('Перенесено на '+(off===0?'сегодня':'завтра')+' ✓');
+}
+function delProjItem(pid,si,path){
+  const stage=projects.find(x=>x.id===pid).stages[si];
+  const idx=path.split('.').map(Number);
+  if(idx.length===1) stage.items.splice(idx[0],1);
+  else{ const parent=getItem(stage, idx.slice(0,-1).join('.')); parent.subs.splice(idx[idx.length-1],1); }
+  rerenderAll();
+}
+let editTarget = null; // {pid, si, path} — куда добавляем; path='' значит в сам этап
+function isEditing(pid,si,path){ return editTarget && editTarget.pid===pid && editTarget.si===si && editTarget.path===path; }
+function addRowHTML(){
+  return `<div class="sub-add-row">
+    <input id="new-sub-input" placeholder="Что нужно сделать?" onkeydown="if(event.key==='Enter')confirmAdd();if(event.key==='Escape')cancelAdd()">
+    <button onclick="confirmAdd()">✓</button><button class="cancel" onclick="cancelAdd()">✕</button></div>`;
+}
+function startAdd(pid,si,path){
+  editTarget={pid,si,path};
+  projects.find(x=>x.id===pid).stages[si].open=1;
+  renderProjects();
+  setTimeout(()=>{ const el=document.getElementById('new-sub-input'); if(el) el.focus(); },60);
+}
+function confirmAdd(){
+  const el=document.getElementById('new-sub-input');
+  const text=el?el.value.trim():'';
+  if(!text){ cancelAdd(); return; }
+  const {pid,si,path}=editTarget;
+  const stage=projects.find(x=>x.id===pid).stages[si];
+  if(path===''){ stage.items.push({t:text, done:false}); }
+  else{
+    const it=getItem(stage,path);
+    it.subs=it.subs||[];
+    it.subs.push({t:text, done:false});
+    it.done=false; // у задачи появилась несделанная подзадача
+  }
+  editTarget=null;
+  renderProjects(); renderWidgets();
+  toast('Добавлено ✓');
+}
+function cancelAdd(){ editTarget=null; renderProjects(); }
+function tgItem(pid,si,path){
+  const stage=projects.find(x=>x.id===pid).stages[si];
+  const it=getItem(stage,path);
+  it.done=!it.done;
+  renderProjects(); renderWidgets(); renderToday(); renderCal();
+}
+
+// ===================== виджеты (демо) =====================
+function wButtons(){
+  return `<div style="display:flex;gap:6px">
+    <button class="w-plus w-mic" onclick="openSheet();setTimeout(voiceInput,350)" title="Задача голосом">🎤</button>
+    <button class="w-plus" onclick="openSheet()" title="Добавить задачу">+</button>
+  </div>`;
+}
+function renderWidgets(){
+  const pd = datedProjItems();
+  // карусель дней: сегодня ↔ завтра ↔ послезавтра
+  const dayNames=['☀️ Сегодня','🌤 Завтра','🗓 Послезавтра'];
+  document.getElementById('car-days').innerHTML = [0,1,2].map(off=>{
+    const key=iso(d(off));
+    const rows = [
+      ...tasks.filter(t=>t.date===key).map(t=>({time:t.time, txt:t.title, done:t.done})),
+      ...pd.filter(x=>x.item.date===key).map(x=>({time:x.item.time, txt:x.item.t, done:x.item.done}))
+    ];
+    return `<div class="widget">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h4 style="margin:0">${dayNames[off]} · ${fmt(d(off))}</h4>${wButtons()}
+      </div>` +
+      (rows.length? rows.map(r=>`<div class="w-task ${r.done?'wdone':''}"><i></i>${r.time?r.time+' · ':''}${r.txt}</div>`).join('')
+       : '<div class="w-task">Пока пусто</div>') +
+      `</div>`;
+  }).join('');
+  document.getElementById('dots-days').textContent = '●○○';
+  // карусель проектов
+  document.getElementById('car-projs').innerHTML = (projects.length? projects : []).map(p=>{
+    const st = projStats(p), left = st.all-st.done;
+    return `<div class="widget">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h4 style="margin:0">📁 ${p.name}</h4>${wButtons()}
+      </div>
+      <div style="font-size:13px">${left?('Осталось задач: <b>'+left+'</b>'):'Готово 🎉'}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">Далее: ${nextStep(p)}</div>
+    </div>`;
+  }).join('') || '<div class="widget"><h4>📁 Проекты</h4><div class="w-task">Проектов пока нет</div></div>';
+  document.getElementById('dots-projs').textContent = '●'+'○'.repeat(Math.max(0,projects.length-1));
+}
+
+// ===================== быстрое добавление =====================
+let selDate = iso(today), selTime='', selProj=0, selRemind=false;
+let selRemStart=true, selRemBefore=[], selRemPersist=false, selRepeat='';
+let sheetMode='add', editProjRef=null;
+function buildChips(){
+  const dc = document.getElementById('date-chips');
+  const near = [iso(today), iso(d(1))];
+  let h = sheetMode==='editProj' ? `<div class="chip" data-d="">Без даты</div>` : '';
+  h += `<div class="chip" data-d="${iso(today)}">Сегодня</div><div class="chip" data-d="${iso(d(1))}">Завтра</div>`;
+  for(let i=2;i<7;i++){ const dt=d(i); near.push(iso(dt)); h+=`<div class="chip" data-d="${iso(dt)}">${DAYS_RU[dt.getDay()].toUpperCase()} ${dt.getDate()}</div>`; }
+  if(selDate && !near.includes(selDate)) h+=`<div class="chip" data-d="${selDate}">${fmt(fromISO(selDate))}</div>`;
+  h+='<div class="chip" data-d="pick">+</div>';
+  dc.innerHTML=h;
+  dc.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+    if(c.dataset.d==='pick'){ toggleAddCal(); return; }
+    selDate=c.dataset.d; markChips();
+  });
+  document.querySelectorAll('#time-chips .chip').forEach(c=>c.onclick=()=>{
+    if(c.dataset.t==='custom'){
+      const box=document.getElementById('time-slider-box');
+      const show = box.style.display==='none'||!box.style.display;
+      if(show){
+        const sl=document.getElementById('time-slider');
+        const [h,m] = (selTime||'12:00').split(':').map(Number);
+        sl.value = Math.round((h*60+m)/10);
+        sliderTime(sl.value);
+      }
+      box.style.display = show?'block':'none';
+      return;
+    }
+    selTime=c.dataset.t; selRemind=!!selTime; markChips();
+  });
+  document.querySelectorAll('#rem-chips .chip').forEach(c=>c.onclick=()=>{
+    if(c.dataset.r==='start'){ selRemStart=!selRemStart; }
+    else{
+      const v=+c.dataset.r;
+      selRemBefore = selRemBefore.includes(v) ? selRemBefore.filter(x=>x!==v) : [...selRemBefore, v].sort((a,b)=>a-b);
+    }
+    markChips();
+  });
+  document.querySelectorAll('#rep-chips .chip').forEach(c=>c.onclick=()=>{ selRepeat=c.dataset.rep; markChips(); });
+  const pc=document.getElementById('proj-chips');
+  pc.innerHTML = '<div class="chip" data-p="0">Просто в список</div>' + projects.map(p=>`<div class="chip" data-p="${p.id}">📁 ${p.name}</div>`).join('');
+  pc.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ selProj=+c.dataset.p; markChips(); });
+  markChips();
+}
+function markChips(){
+  document.querySelectorAll('#date-chips .chip').forEach(c=>c.classList.toggle('sel', c.dataset.d===selDate));
+  const presets=[...document.querySelectorAll('#time-chips .chip')].map(c=>c.dataset.t);
+  document.querySelectorAll('#time-chips .chip').forEach(c=>{
+    if(c.dataset.t==='custom'){
+      const isCustom = !!selTime && !presets.includes(selTime);
+      c.classList.toggle('sel', isCustom);
+      c.textContent = isCustom ? selTime : '+';
+    } else c.classList.toggle('sel', c.dataset.t===selTime);
+  });
+  document.querySelectorAll('#proj-chips .chip').forEach(c=>c.classList.toggle('sel', +c.dataset.p===selProj));
+  const tg=document.getElementById('remind-tg');
+  if(tg) tg.classList.toggle('on', selRemind);
+  document.getElementById('smart-remind').style.display = selRemind?'block':'none';
+  document.querySelectorAll('#rem-chips .chip').forEach(c=>{
+    if(c.dataset.r==='start') c.classList.toggle('sel', selRemStart);
+    else c.classList.toggle('sel', selRemBefore.includes(+c.dataset.r));
+  });
+  document.getElementById('persist-tg').classList.toggle('on', selRemPersist);
+  document.querySelectorAll('#rep-chips .chip').forEach(c=>c.classList.toggle('sel', c.dataset.rep===selRepeat));
+}
+function toggleRemind(){ selRemind=!selRemind; markChips(); }
+function togglePersist(){ selRemPersist=!selRemPersist; markChips(); }
+function sliderTime(v){
+  const mins=v*10;
+  const t=String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0');
+  document.getElementById('slider-val').textContent=t;
+  selTime=t; selRemind=true; markChips();
+}
+
+// мини-календарь внутри шторки добавления
+let addCalY=today.getFullYear(), addCalM=today.getMonth();
+function toggleAddCal(){
+  const el=document.getElementById('mc-add');
+  const show = el.style.display==='none'||!el.style.display;
+  if(show){ const dt=fromISO(selDate); addCalY=dt.getFullYear(); addCalM=dt.getMonth(); renderAddCal(); }
+  el.style.display = show?'block':'none';
+}
+function renderAddCal(){ document.getElementById('mc-add').innerHTML = monthGridHTML(addCalY,addCalM,selDate,'addPick','addNav'); }
+function addNav(dir){ const x=new Date(addCalY,addCalM+dir,1); addCalY=x.getFullYear(); addCalM=x.getMonth(); renderAddCal(); }
+function addPick(key){
+  selDate=key;
+  document.getElementById('mc-add').style.display='none';
+  buildChips();
+  toast('Задача будет на '+fmt(fromISO(key)));
+}
+function parseNL(){
+  const v = document.getElementById('q-input').value.toLowerCase();
+  let found=[];
+  if(/послезавтра/.test(v)){ selDate=iso(d(2)); found.push('послезавтра'); }
+  else if(/завтра/.test(v)){ selDate=iso(d(1)); found.push('завтра'); }
+  else if(/сегодня/.test(v)){ selDate=iso(today); found.push('сегодня'); }
+  for(const w in DAYS_FULL){
+    if(v.includes(w)){
+      let off=(DAYS_FULL[w]-today.getDay()+7)%7; if(off===0) off=7;
+      selDate=iso(d(off)); found.push('в '+w.slice(0,2)+'…');
+    }
+  }
+  const m = v.match(/в\s?(\d{1,2})[:.](\d{2})/) || v.match(/в\s?(\d{1,2})\s?час/);
+  if(m){ selTime=(m[1].padStart(2,'0'))+':'+(m[2]||'00'); selRemind=true; found.push('время '+selTime); }
+  markChips();
+  document.getElementById('parsed').textContent = found.length? '✓ Понял: '+found.join(', ') : '';
+}
+let editTaskId=null;
+function showSheet(){
+  document.getElementById('parsed').textContent='';
+  document.getElementById('mc-add').style.display='none';
+  document.getElementById('time-slider-box').style.display='none';
+  buildChips();
+  document.getElementById('sheet-bg').style.display='block';
+  document.getElementById('sheet').classList.add('up');
+  setTimeout(()=>document.getElementById('q-input').focus(),300);
+}
+function openSheet(){
+  editTaskId=null; sheetMode='add'; editProjRef=null;
+  selDate=iso(today); selTime=''; selProj=0; selRemind=false;
+  selRemStart=true; selRemBefore=[]; selRemPersist=false; selRepeat='';
+  document.getElementById('q-input').value='';
+  document.getElementById('note-input').value='';
+  document.getElementById('rep-label').style.display='';
+  document.getElementById('rep-chips').style.display='';
+  document.getElementById('sheet-title').textContent='Новая задача';
+  document.getElementById('add-btn').textContent='Добавить';
+  document.getElementById('del-btn').style.display='none';
+  document.getElementById('proj-label').style.display='';
+  document.getElementById('proj-chips').style.display='';
+  showSheet();
+}
+function openEdit(id){
+  const t=tasks.find(x=>x.id===id); if(!t) return;
+  editTaskId=id; sheetMode='editTask'; editProjRef=null;
+  selDate=t.date; selTime=t.time||''; selProj=0; selRemind=!!t.remind;
+  selRemStart=t.remStart!==false; selRemBefore=[...(t.remBefore||[])]; selRemPersist=!!t.remPersist; selRepeat=t.repeat||'';
+  document.getElementById('q-input').value=t.title;
+  document.getElementById('note-input').value=t.note||'';
+  document.getElementById('rep-label').style.display='';
+  document.getElementById('rep-chips').style.display='';
+  document.getElementById('sheet-title').textContent='Изменить задачу';
+  document.getElementById('add-btn').textContent='Сохранить';
+  document.getElementById('del-btn').style.display='block';
+  document.getElementById('proj-label').style.display='none';
+  document.getElementById('proj-chips').style.display='none';
+  showSheet();
+}
+function openEditProj(pid,si,path){
+  const it=getItem(projects.find(x=>x.id===pid).stages[si],path);
+  sheetMode='editProj'; editProjRef={pid,si,path}; editTaskId=null;
+  selDate=it.date||''; selTime=it.time||''; selProj=0; selRemind=!!it.remind;
+  selRemStart=it.remStart!==false; selRemBefore=[...(it.remBefore||[])]; selRemPersist=!!it.remPersist; selRepeat='';
+  document.getElementById('q-input').value=it.t;
+  document.getElementById('note-input').value=it.note||'';
+  document.getElementById('rep-label').style.display='none';
+  document.getElementById('rep-chips').style.display='none';
+  document.getElementById('sheet-title').textContent='Задача проекта';
+  document.getElementById('add-btn').textContent='Сохранить';
+  document.getElementById('del-btn').style.display='block';
+  document.getElementById('proj-label').style.display='none';
+  document.getElementById('proj-chips').style.display='none';
+  showSheet();
+}
+function rerenderAll(){ renderToday(); renderCal(); renderProjects(); renderWidgets(); }
+function deleteTask(){
+  if(sheetMode==='editProj'){
+    const {pid,si,path}=editProjRef;
+    const stage=projects.find(x=>x.id===pid).stages[si];
+    const idx=path.split('.').map(Number);
+    if(idx.length===1) stage.items.splice(idx[0],1);
+    else{ const parent=getItem(stage, idx.slice(0,-1).join('.')); parent.subs.splice(idx[idx.length-1],1); }
+  } else {
+    tasks = tasks.filter(t=>t.id!==editTaskId);
+  }
+  editTaskId=null; editProjRef=null; closeSheet();
+  rerenderAll();
+  toast('Задача удалена 🗑');
+}
+function closeSheet(){
+  document.getElementById('sheet-bg').style.display='none';
+  document.getElementById('sheet').classList.remove('up');
+}
+function cleanTitle(v){
+  return v.replace(/послезавтра|завтра|сегодня/gi,'')
+          .replace(new RegExp('в\\s?('+Object.keys(DAYS_FULL).join('|')+')','gi'),'')
+          .replace(/в\s?\d{1,2}[:.]\d{2}/g,'').replace(/в\s?\d{1,2}\s?час(а|ов)?/g,'')
+          .replace(/\s+/g,' ').trim();
+}
+function addTask(){
+  const raw = document.getElementById('q-input').value.trim();
+  if(!raw){ toast('Напиши, что нужно сделать'); return; }
+  const title = cleanTitle(raw) || raw;
+  if(sheetMode==='editProj'){
+    const {pid,si,path}=editProjRef;
+    const it=getItem(projects.find(x=>x.id===pid).stages[si],path);
+    it.t=title.charAt(0).toUpperCase()+title.slice(1);
+    it.date=selDate||undefined; it.time=selTime||undefined;
+    it.remind=selRemind && !!selDate;
+    it.remStart=selRemStart; it.remBefore=[...selRemBefore]; it.remPersist=selRemPersist;
+    it.note=document.getElementById('note-input').value.trim()||undefined;
+    editProjRef=null; closeSheet();
+    rerenderAll(); toast('Сохранено ✓');
+    return;
+  }
+  if(editTaskId){
+    const t=tasks.find(x=>x.id===editTaskId);
+    if(t){ t.title=title.charAt(0).toUpperCase()+title.slice(1); t.date=selDate; t.time=selTime; t.remind=selRemind;
+      t.remStart=selRemStart; t.remBefore=[...selRemBefore]; t.remPersist=selRemPersist;
+      t.repeat=selRepeat||undefined; t.note=document.getElementById('note-input').value.trim()||undefined; }
+    editTaskId=null; closeSheet();
+    rerenderAll(); toast('Сохранено ✓');
+    return;
+  }
+  const pname = selProj? projects.find(p=>p.id===selProj).name : null;
+  if(pname){
+    const p = projects.find(x=>x.id===selProj);
+    p.stages[0].items.push({t:title.charAt(0).toUpperCase()+title.slice(1), done:false,
+      date:selDate||undefined, time:selTime||undefined, remind:selRemind&&!!selDate,
+      remStart:selRemStart, remBefore:[...selRemBefore], remPersist:selRemPersist,
+      note:document.getElementById('note-input').value.trim()||undefined});
+  } else {
+    tasks.push({id:++taskId, title:title.charAt(0).toUpperCase()+title.slice(1), date:selDate, time:selTime, done:false, remind:selRemind,
+      remStart:selRemStart, remBefore:[...selRemBefore], remPersist:selRemPersist,
+      repeat:selRepeat||undefined, note:document.getElementById('note-input').value.trim()||undefined, proj:pname});
+  }
+  closeSheet();
+  const dt=fromISO(selDate);
+  toast(pname? 'Добавлено в проект «'+pname+'»' : 'Задача на '+(selDate===iso(today)?'сегодня':fmt(dt))+' ✓');
+  renderToday(); renderCal(); renderWidgets();
+}
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ===================== свайпы по задачам =====================
+// вправо — выполнено, влево — открыть действия (перенести/удалить)
+let swEl=null, swX=0, swDx=0, swSuppress=false;
+const mainEl=document.querySelector('main');
+mainEl.addEventListener('pointerdown', e=>{
+  const t=e.target.closest('.task');
+  if(!t || e.target.closest('button') || e.target.closest('.chk')) return;
+  swEl=t; swX=e.clientX; swDx=0;
+});
+mainEl.addEventListener('pointermove', e=>{
+  if(!swEl) return;
+  swDx=e.clientX-swX;
+  if(Math.abs(swDx)>8) swEl.style.transform='translateX('+Math.max(-110,Math.min(110,swDx))+'px)';
+});
+function swEnd(){
+  if(!swEl) return;
+  const el=swEl, dx=swDx;
+  swEl=null;
+  el.style.transform='';
+  if(Math.abs(dx)>12) swSuppress=true;
+  document.querySelectorAll('.task.swiped').forEach(x=>{ if(x!==el) x.classList.remove('swiped'); });
+  if(dx>70){
+    if(el.dataset.tid) toggle(+el.dataset.tid);
+    else if(el.dataset.ref){ const [pid,si,path]=el.dataset.ref.split('|'); tgItem(+pid,+si,path); }
+  } else if(dx<-70){
+    el.classList.add('swiped');
+  } else if(dx<-12){
+    el.classList.remove('swiped');
+  }
+}
+mainEl.addEventListener('pointerup', swEnd);
+mainEl.addEventListener('pointercancel', ()=>{ if(swEl){ swEl.style.transform=''; swEl=null; } });
+document.addEventListener('click', e=>{
+  if(swSuppress){ e.stopPropagation(); e.preventDefault(); swSuppress=false; }
+}, true);
+
+// ===================== голосовой ввод =====================
+let rec=null;
+function voiceInput(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ toast('Голос не поддерживается в этом браузере — в приложении будет всегда'); return; }
+  if(rec){ rec.stop(); return; }
+  const btn=document.getElementById('mic-btn');
+  rec = new SR();
+  rec.lang='ru-RU'; rec.interimResults=true; rec.continuous=false;
+  rec.onresult = e=>{
+    const text=[...e.results].map(r=>r[0].transcript).join('').trim();
+    document.getElementById('q-input').value=text;
+    parseNL();
+  };
+  rec.onend = ()=>{ btn.classList.remove('rec'); rec=null; };
+  rec.onerror = ev=>{ if(ev.error!=='aborted') toast('Не расслышал — попробуй ещё раз'); };
+  btn.classList.add('rec');
+  try{ rec.start(); toast('Говори — я слушаю… 🎤'); }
+  catch(e){ btn.classList.remove('rec'); rec=null; }
+}
+
+// ===================== тема =====================
+let themeMode='dark';
+const mqLight = window.matchMedia('(prefers-color-scheme: light)');
+function applyTheme(){
+  const light = themeMode==='light' || (themeMode==='auto' && mqLight.matches);
+  document.getElementById('phone').classList.toggle('light', light);
+}
+function setTheme(t){
+  themeMode=t; applyTheme();
+  document.querySelectorAll('#theme-seg button').forEach(b=>b.classList.toggle('active', b.dataset.th===t));
+  toast(t==='auto'?'Тема — как в настройках телефона':(t==='light'?'Светлая тема':'Тёмная тема'));
+}
+mqLight.addEventListener('change', applyTheme);
+
+// ===================== сохранение данных на устройстве =====================
+// (в тест-версии для телефона данные переживают закрытие; если хранилище недоступно — просто работаем в памяти)
+function saveState(){
+  try{ localStorage.setItem('poryadok-v1', JSON.stringify({tasks, projects, taskId, themeMode})); }catch(e){}
+}
+function loadState(){
+  try{
+    const s=JSON.parse(localStorage.getItem('poryadok-v1'));
+    if(s && s.tasks && s.projects){
+      tasks=s.tasks; projects=s.projects; taskId=s.taskId||100;
+      if(s.themeMode){ themeMode=s.themeMode; }
+    }
+  }catch(e){}
+}
+loadState();
+try{
+  applyTheme();
+  document.querySelectorAll('#theme-seg button').forEach(b=>b.classList.toggle('active', b.dataset.th===themeMode));
+}catch(e){}
+setInterval(saveState, 2000);
+window.addEventListener('pagehide', saveState);
+
+// старт
+document.getElementById('scr-sub').textContent = titles.today[1]();
+renderToday(); renderCal(); renderProjects(); renderWidgets();
+</script>
+</body>
+</html>

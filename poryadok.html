@@ -342,6 +342,147 @@
     overflow:hidden; text-overflow:ellipsis;
   }
   #toast.show{opacity:1;}
+
+  /* ---- кнопки в шапке + поиск ---- */
+  .hdr-act{display:flex; gap:7px; align-items:center; padding-bottom:3px;}
+  .hdr-btn{
+    width:38px; height:38px; border:none; border-radius:12px; background:var(--card); color:var(--text);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .hdr-btn svg{width:19px; height:19px;}
+  #srch-input{
+    width:100%; background:var(--card); border:1px solid var(--line); border-radius:14px;
+    color:var(--text); font-size:16px; padding:12px 14px; outline:none; font-family:inherit; margin-bottom:8px;
+  }
+  #srch-input:focus{border-color:var(--accent);}
+  .res-src{font-size:11px; color:var(--muted); margin-top:3px;}
+
+  /* ---- чек-лист внутри задачи ---- */
+  .t-subs{margin-top:7px; display:flex; flex-direction:column; gap:4px;}
+  .t-sub{display:flex; gap:8px; align-items:center; font-size:13px; cursor:pointer;}
+  .t-sub .sub-line{
+    width:16px; height:16px; min-width:16px; border:1.6px solid var(--muted); border-radius:5px;
+    display:flex; align-items:center; justify-content:center; color:#fff;
+  }
+  .t-sub .sub-line svg{width:10px; height:10px;}
+  .t-sub.sd .sub-line{background:var(--green); border-color:var(--green);}
+  .t-sub.sd{text-decoration:line-through; color:var(--muted);}
+  /* тот же чек-лист, но в окне задачи — крупнее, карточкой */
+  #subs-list{gap:6px;}
+  #subs-list .t-sub{
+    background:var(--bg); border:1px solid var(--line); border-radius:12px;
+    padding:9px 10px 9px 12px; font-size:14px;
+  }
+  #sub-input{
+    flex:1; min-width:0; background:var(--bg); border:1px solid var(--line); border-radius:12px;
+    color:var(--text); outline:none; font-family:inherit;
+  }
+  #sub-input:focus{border-color:var(--accent);}
+  #sub-add{
+    width:44px; min-width:44px; border-radius:12px; border:none; cursor:pointer;
+    background:var(--accent); color:var(--on-accent);
+    display:flex; align-items:center; justify-content:center;
+  }
+  #sub-add svg{width:17px; height:17px;}
+  .sub-x{
+    background:none; border:none; color:var(--muted); cursor:pointer; padding:2px 0 2px 6px;
+    display:flex; align-items:center; margin-left:auto;
+  }
+  .sub-x svg{width:13px; height:13px;}
+
+  /* важное */
+  .task.imp{border-left:3px solid var(--amber);}
+  .t-meta .imp-m{color:var(--amber);}
+  .task.done .t-meta .imp-m{color:var(--muted);}
+
+  /* пустые экраны с кнопкой */
+  .empty-big{text-align:center; padding:26px 16px 10px;}
+  .empty-big .eb-ic{
+    width:58px; height:58px; margin:0 auto 13px; border-radius:19px; background:var(--accent-soft);
+    display:flex; align-items:center; justify-content:center; color:var(--accent);
+  }
+  .empty-big .eb-ic svg{width:27px; height:27px;}
+  .empty-big h3{font-size:16.5px; margin-bottom:7px;}
+  .empty-big p{font-size:13px; color:var(--muted); line-height:1.5; margin:0 auto 15px; max-width:270px;}
+  .cta{
+    background:var(--accent); color:var(--on-accent); border:none; border-radius:14px; padding:12px 22px;
+    font-size:15px; font-weight:600; cursor:pointer; font-family:inherit; box-shadow:0 6px 16px var(--glow);
+  }
+  .cta.ghost{background:var(--card); color:var(--text); box-shadow:none; border:1px solid var(--line); font-weight:500;}
+  .cta.wide{width:100%; padding:15px; font-size:16px;}
+
+  /* перетаскивание порядка */
+  .task.drag{opacity:.96; box-shadow:0 14px 30px rgba(0,0,0,.45); position:relative; z-index:5;}
+
+  /* статистика */
+  .stats{display:flex; gap:8px; margin-bottom:10px;}
+  .stat{flex:1; background:var(--card); border-radius:16px; padding:13px 8px; text-align:center;}
+  .stat b{display:block; font-size:23px; font-weight:700; color:var(--accent); line-height:1;}
+  .stat span{font-size:11px; color:var(--muted); line-height:1.3; display:block; margin-top:5px;}
+  .bars{display:flex; align-items:flex-end; gap:6px; height:86px; background:var(--card); border-radius:16px; padding:10px 12px;}
+  .bar{flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; height:100%; gap:5px;}
+  .bar i{display:block; width:100%; border-radius:5px; background:var(--accent); min-height:3px;}
+  .bar i.z{background:var(--card2);}
+  .bar u{font-size:9.5px; color:var(--muted); text-decoration:none;}
+
+  /* время сводок */
+  .tm-row{
+    display:flex; align-items:center; gap:10px;
+    background:var(--card); border-radius:14px; padding:6px 14px; margin:-4px 0 8px;
+  }
+  .tm-row>span{font-size:12.5px; color:var(--muted); white-space:nowrap;}
+  .tm-row>b{color:var(--accent); font-size:15px; min-width:44px; text-align:right;
+    font-variant-numeric:tabular-nums;}
+  .tm-row input[type=range]{flex:1; min-width:0; accent-color:var(--accent); height:30px; margin:0;}
+
+  /* онбординг и подписка */
+  .cover{
+    position:absolute; inset:0; z-index:70; background:var(--bg); display:none; flex-direction:column;
+    padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(22px + env(safe-area-inset-bottom,0px));
+    overflow-y:auto;
+  }
+  .cover.show{display:flex;}
+  .cover .art{display:flex; justify-content:center; margin:0 0 20px;}
+  .onb-mid{margin-top:auto;}   /* вместе с margin:auto у .dots центрирует содержимое по вертикали */
+  .cover .eb-ic{
+    width:74px; height:74px; border-radius:24px; background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .cover .eb-ic svg{width:34px; height:34px;}
+  .cover h2{font-size:23px; line-height:1.25; margin-bottom:10px; text-align:center;}
+  .cover p{font-size:14.5px; color:var(--muted); line-height:1.55; max-width:300px;
+    text-align:center; margin:0 auto;}
+  .cover .w-note{margin-top:10px;}
+  .dots{display:flex; gap:7px; justify-content:center; margin:auto 0 16px;}
+  .dots i{width:7px; height:7px; border-radius:4px; background:var(--line); transition:.2s;}
+  .dots i.on{background:var(--accent); width:20px;}
+  .cover .skip{
+    position:absolute; top:calc(14px + env(safe-area-inset-top,0px)); right:14px; z-index:2;
+    background:none; border:none; color:var(--muted); font-size:14px; cursor:pointer;
+    font-family:inherit; padding:10px 12px; display:flex; align-items:center;
+  }
+  .cover .skip svg{width:18px; height:18px;}
+  .plan{
+    background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:12px 15px;
+    margin-bottom:9px; cursor:pointer; display:flex; align-items:center; gap:10px;
+  }
+  .plan.sel{border-color:var(--accent); background:var(--accent-soft);}
+  .plan b{font-size:15px; font-weight:600; display:block;}
+  .plan span{font-size:11.5px; color:var(--muted); display:block; margin-top:2px;}
+  .plan .badge{margin-left:auto;}
+  .feat{display:flex; flex-direction:column; gap:9px; margin:20px 0 16px;}
+  .feat>div{display:flex; gap:10px; align-items:center; font-size:14px; line-height:1.35;}
+  .feat .mi{color:var(--green); flex-shrink:0; width:18px; height:18px; margin:0; vertical-align:0;}
+  .feat .mi svg{width:18px; height:18px;}
+  .badge{
+    display:inline-block; background:var(--accent-soft); color:var(--accent); font-size:11px; font-weight:600;
+    padding:3px 9px; border-radius:8px; margin-left:6px; vertical-align:2px;
+  }
+  .seg-cnt{
+    display:inline-block; min-width:17px; padding:0 5px; margin-left:5px; border-radius:9px;
+    background:var(--accent-soft); color:var(--accent); font-size:10.5px; font-weight:700; line-height:16px;
+  }
+  .seg button.active .seg-cnt{background:rgba(255,255,255,.28); color:#fff;}
 </style>
 </head>
 <body>
@@ -351,6 +492,7 @@
       <h1 id="scr-title">Сегодня</h1>
       <div class="sub" id="scr-sub"></div>
     </div>
+    <div class="hdr-act" id="hdr-act"></div>
   </header>
 
   <main>
@@ -364,6 +506,8 @@
     <section class="screen" id="scr-proj"></section>
     <section class="screen" id="scr-more"></section>
     <section class="screen" id="scr-set"></section>
+    <section class="screen" id="scr-search"></section>
+    <section class="screen" id="scr-arch"></section>
   </main>
 
   <button id="fab" onclick="openSheet()"></button>
@@ -382,6 +526,12 @@
     </div>
     <div class="hint" id="sheet-hint"></div>
     <textarea id="note-input" rows="2"></textarea>
+    <div class="row-label" id="lbl-subs"></div>
+    <div class="t-subs" id="subs-list" style="margin:0 0 8px"></div>
+    <div class="input-row" id="sub-row" style="margin-bottom:4px">
+      <input id="sub-input" style="font-size:15px; padding:10px 12px" onkeydown="if(event.key==='Enter')addSub()">
+      <button id="sub-add" onclick="addSub()"></button>
+    </div>
     <div class="row-label" id="lbl-day"></div>
     <div class="chips" id="date-chips"></div>
     <div class="mini-cal" id="mc-add" style="display:none"></div>
@@ -402,6 +552,8 @@
       <div class="toggle-row" style="background:var(--bg)"><span id="lbl-persist"></span>
         <div class="tg" id="persist-tg" onclick="togglePersist()"></div></div>
     </div>
+    <div class="toggle-row" style="margin-top:8px; background:var(--bg)"><span id="lbl-imp"></span>
+      <div class="tg" id="imp-tg" onclick="toggleImp()"></div></div>
     <div class="row-label" id="rep-label"></div>
     <div class="chips" id="rep-chips"></div>
     <div class="row-label" id="proj-label"></div>
@@ -422,6 +574,10 @@
       </div>
     </div>
   </div>
+
+  <div class="cover" id="onb"></div>
+  <div class="cover" id="pay"></div>
+  <input type="file" id="imp-file" accept="application/json,.json" style="display:none" onchange="importBackup(this)">
 
   <div id="toast"></div>
 </div>
@@ -448,6 +604,16 @@ const ICS = {
   globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"/></svg>',
   data:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>',
   grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7.3" height="7.3" rx="2"/><rect x="13.2" y="3.5" width="7.3" height="7.3" rx="2"/><rect x="3.5" y="13.2" width="7.3" height="7.3" rx="2"/><rect x="13.2" y="13.2" width="7.3" height="7.3" rx="2"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M15.8 15.8L20.5 20.5"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.8l5.9-.9z"/></svg>',
+  inbox:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 13.5L6 5.2A2 2 0 018 3.7h8a2 2 0 012 1.5l2.5 8.3V18a2 2 0 01-2 2H5.5a2 2 0 01-2-2z"/><path d="M3.5 13.5h4l1.3 2.4h6.4l1.3-2.4h4"/></svg>',
+  list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1.1 1.1L7 4.8M4 12l1.1 1.1L7 10.8M4 18l1.1 1.1L7 16.8"/></svg>',
+  crown:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16M4.5 15.5L3 7l5 3.5L12 4l4 6.5L21 7l-1.5 8.5z"/></svg>',
+  arch:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="5" rx="1.8"/><path d="M5 9v9a2 2 0 002 2h10a2 2 0 002-2V9M10 13h4"/></svg>',
+  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6.5 11.5L12 17l5.5-5.5M5 20h14"/></svg>',
+  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V8M6.5 12.5L12 7l5.5 5.5M5 4h14"/></svg>',
+  arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
+  fire:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s5.5 4.2 5.5 9a5.5 5.5 0 01-11 0c0-2 1-3.5 1-3.5s.5 1.8 2 2.2C9 8.5 12 7 12 3z"/></svg>',
 };
 function mi(name, cls){ return `<span class="mi ${cls||''}">${ICS[name]}</span>`; }
 // логотип приложения: скруглённый квадрат, список с галочкой
@@ -537,6 +703,78 @@ const STR = {
   themeSet:{ light:['Светлая тема','Light theme'], dark:['Тёмная тема','Dark theme'], auto:['Тема — как в настройках телефона','Theme follows the phone'] },
   calOpens:['Выбери день в календаре ниже','Pick a day in the calendar below'],
   understood:['Понял: ','Got it: '],
+  // v12: входящие, поиск, архив, важное, чек-лист, порядок, онбординг, подписка
+  segToday:['Сегодня','Today'], segUp:['Дальше','Upcoming'], segIn:['Входящие','Inbox'],
+  inbox:['Входящие','Inbox'],
+  inboxNote:['Задачи без даты. Мысль записал — день назначишь потом.','Tasks with no date. Capture the thought now, pick the day later.'],
+  inboxEmpty:['Здесь пусто','Nothing here'],
+  inboxEmptyD:['Сюда попадают задачи, которым ты не поставил дату. Удобно, когда мысль пришла на ходу.','Tasks you did not date land here. Handy for thoughts on the go.'],
+  upEmpty:['Впереди чисто','Nothing ahead'],
+  upEmptyD:['Задачи на ближайшие две недели появятся здесь.','Tasks for the next two weeks will show up here.'],
+  todayEmptyD:['Нажми «+» и напиши, что нужно сделать. День выбирается одним тапом.','Tap “+” and type what needs doing. Pick the day in one tap.'],
+  addTaskCta:['Добавить задачу','Add a task'],
+  laterNoDate:['Позже, без даты','Later, no date'],
+  search:['Поиск','Search'], searchPh:['Задача, заметка, проект…','Task, note, project…'],
+  searchNothing:['Ничего не нашлось','Nothing found'],
+  searchStart:['Начни печатать','Start typing'],
+  searchStartD:['Ищу по названиям задач, заметкам, пунктам чек-листа и проектам.','I search task titles, notes, checklist items and projects.'],
+  onlyImp:['Только важные','Important only'],
+  inTask:['в задаче','in task'], inNote:['в заметке','in note'], inProj:['проект','project'],
+  imp:['Важное','Important'],
+  impNote:['Важные помечаются флажком и выносятся наверх дня','Important tasks get a flag and go to the top of the day'],
+  subs:['Чек-лист','Checklist'], subPh:['Пункт чек-листа','Checklist item'],
+  subsMeta:['{a} из {b}','{a} of {b}'],
+  archive:['Архив','Archive'], archiveSub:['что уже сделано','what is already done'],
+  doneToday:['Сегодня','Today'], done7:['За 7 дней','Last 7 days'], streak:['Дней подряд','Day streak'],
+  week7:['Выполнено по дням','Completed by day'],
+  archEmpty:['Пока пусто','Empty for now'],
+  archEmptyD:['Здесь копится всё сделанное — приятно смотреть в конце недели.','Everything you finish piles up here — nice to look at on Friday.'],
+  earlier:['Раньше','Earlier'],
+  clearArch:['Очистить архив','Clear archive'],
+  confirmArch:['Удалить все выполненные задачи из архива?','Delete all completed tasks from the archive?'],
+  archCleared:['Архив очищен','Archive cleared'],
+  backup:['Резервная копия','Backup'],
+  exportB:['Сохранить в файл','Save to file'], importB:['Восстановить из файла','Restore from file'],
+  exportD:['Все задачи и проекты одним файлом','All tasks and projects in one file'],
+  importD:['Заменит текущие данные данными из файла','Replaces current data with the file'],
+  exported:['Файл сохранён','File saved'],
+  confirmImport:['Заменить все текущие данные данными из файла? Задач в файле: {n}.','Replace all current data with the file? Tasks in file: {n}.'],
+  restore:['Восстановить','Restore'],
+  imported:['Восстановлено: {n} задач','Restored: {n} tasks'],
+  badFile:['Файл не подходит — нужен файл копии «Порядка»','Wrong file — need a Poryadok backup file'],
+  digest:['Сводки','Digests'],
+  eveningAt:['Во сколько','At what time'], morningAt:['Во сколько','At what time'],
+  quietFrom:['Тишина с','Quiet from'], quietTo:['Тишина до','Quiet until'],
+  digestNote:['Время сводок настраивается — двигай ползунок с шагом 10 минут','Digest times are yours — drag the slider in 10-minute steps'],
+  holdToDrag:['Удерживай задачу — и меняй порядок дня','Hold a task to reorder your day'],
+  orderSaved:['Порядок сохранён','Order saved'],
+  upcoming:['Дальше','Upcoming'],
+  // онбординг
+  onb1t:['Задача за 3 секунды','A task in 3 seconds'],
+  onb1d:['Пишешь или говоришь «завтра в 18:00 позвонить маме» — дата и время подставятся сами.','Type or say “tomorrow at 6pm call mom” — date and time fill in by themselves.'],
+  onb2t:['Проекты, а не свалка','Projects, not a dump'],
+  onb2d:['Большие цели живут этапами и подзадачами и не засоряют список дня.','Big goals live in stages and subtasks and never clutter your day.'],
+  onb3t:['Напомнит и не отстанет','It reminds and does not give up'],
+  onb3d:['Настойчивый режим, сводки в удобное тебе время и виджеты на главном экране.','Persistent mode, digests at your own time and home-screen widgets.'],
+  onbNext:['Дальше','Next'], onbStart:['Начать','Start'], skip:['Пропустить','Skip'],
+  // подписка
+  proTitle:['Порядок Pro','Poryadok Pro'],
+  proSub:['14 дней бесплатно, потом — как решишь','14 days free, then it is up to you'],
+  proF1:['Проекты без ограничений','Unlimited projects'],
+  proF2:['Все виджеты на главном экране','All home-screen widgets'],
+  proF3:['Настойчивые напоминания и сводки','Persistent reminders and digests'],
+  proF4:['Архив, поиск и резервные копии','Archive, search and backups'],
+  proF5:['Темы и свой цвет приложения','Themes and your own app colour'],
+  planY:['1490 ₽ / год','$19.99 / year'], planYs:['124 ₽ в месяц — выгоднее','$1.67 per month — best value'],
+  planM:['199 ₽ / мес','$2.99 / month'], planMs:['помесячно, отменить в любой момент','monthly, cancel anytime'],
+  best:['Выгодно','Best'],
+  startTrial:['Начать 14 дней бесплатно','Start 14 free days'],
+  trialNote:['Списаний в пробном периоде нет. Отменить можно в любой момент.','No charge during the trial. Cancel anytime.'],
+  trialOn:['Пробный период начался — 14 дней Pro','Trial started — 14 days of Pro'],
+  proRow:['Pro','Pro'], proTrial:['пробный период, осталось {n} дн.','trial, {n} days left'],
+  proFree:['бесплатная версия','free version'],
+  proActive:['подписка активна','subscription active'],
+  demoOnly:['В прототипе оплата не подключена — это макет экрана подписки.','Payment is not wired up in the prototype — this is a mockup of the paywall.'],
 };
 const DATES = {
   ru:{ DW:['вс','пн','вт','ср','чт','пт','сб'],
@@ -560,7 +798,9 @@ function DL(){ return DATES[lang()]; }
 // ===================== настройки и состояние =====================
 const PALETTE = ['#5b8cff','#2b62c4','#0d7ab0','#1f8f62','#3ecf8e','#6b3fb5','#8d3468','#b02a4a','#c0562a','#b0782a','#2c3440'];
 let SET = { theme:'dark', accent:'#5b8cff', icon:'#5b8cff', link:true, lang:'ru',
-            notif:{persist:true, evening:true, morning:false, quiet:true} };
+            seen:false, pro:false, trialStart:null,
+            notif:{persist:true, evening:true, eveningAt:'21:00', morning:false, morningAt:'08:00',
+                   quiet:true, quietFrom:'23:00', quietTo:'07:00'} };
 let taskId = 100;
 let tasks = [];
 let projects = [];
@@ -623,7 +863,7 @@ let screen='today', setPage=null, curProj=null;
 function renderNav(){
   const tabs=[['today','sun','today'],['cal','cal','calendar'],['proj','folder','projects'],['more','more','more']];
   document.getElementById('navbar').innerHTML = tabs.map(([s,ic,k])=>
-    `<button class="${(screen===s || (s==='more'&&screen==='set'))?'active':''}" onclick="go('${s}')">
+    `<button class="${(screen===s || (s==='more'&&(screen==='set'||screen==='arch')))?'active':''}" onclick="go('${s}')">
       <span class="ico">${ICS[ic]}</span>${t(k)}</button>`).join('');
   document.getElementById('fab').innerHTML = ICS.plus;
 }
@@ -633,9 +873,17 @@ function headerFor(){
   if(screen==='proj') return [t('projects'), t('projSub')];
   if(screen==='more') return [t('more'), t('moreSub')];
   if(screen==='set') return [t(setTitleKey()), ''];
+  if(screen==='search') return [t('search'), ''];
+  if(screen==='arch') return [t('archive'), t('archiveSub')];
   return ['',''];
 }
 function setTitleKey(){ return ({look:'setLook',lang:'setLang',notif:'setNotif',wgt:'setWgt',data:'setData'})[setPage]||'more'; }
+// кнопки в шапке: поиск там, где есть что искать
+function renderHdrAct(){
+  const el=document.getElementById('hdr-act');
+  const showSearch = ['today','cal','proj','arch'].includes(screen);
+  el.innerHTML = showSearch ? `<button class="hdr-btn" onclick="openSearch()">${ICS.search}</button>` : '';
+}
 function go(s){
   screen=s;
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
@@ -643,17 +891,25 @@ function go(s){
   const [h1,sub]=headerFor();
   document.getElementById('scr-title').textContent=h1;
   document.getElementById('scr-sub').textContent=sub;
-  document.getElementById('fab').style.display=(s==='more'||s==='set')?'none':'flex';
-  renderNav();
+  document.getElementById('fab').style.display=(s==='more'||s==='set'||s==='search'||s==='arch')?'none':'flex';
+  renderNav(); renderHdrAct();
   if(s==='today') renderToday();
   if(s==='cal') renderCal();
   if(s==='proj'){ curProj=null; renderProjects(); }
   if(s==='more') renderMore();
   if(s==='set') renderSet();
+  if(s==='search') renderSearch();
+  if(s==='arch') renderArch();
   document.querySelector('main').scrollTop=0;
 }
 function openSet(p){ setPage=p; go('set'); }
-function rerenderAll(){ renderToday(); renderCal(); renderProjects(); if(screen==='more') renderMore(); if(screen==='set') renderSet(); }
+function rerenderAll(){
+  renderToday(); renderCal(); renderProjects();
+  if(screen==='more') renderMore();
+  if(screen==='set') renderSet();
+  if(screen==='arch') renderArch();
+  if(screen==='search') srchInput(srchQ, true);
+}
 function renderAll(){ go(screen); }
 
 // ===================== задачи: рендер =====================
@@ -665,26 +921,41 @@ function bellMeta(x){
     : t('remindMeta');
   return `<span class="bell-m">${mi('bell')}${txt}${x.remPersist? ' '+mi('repeat'):''}</span>`;
 }
+function isOver(x){ return !!x.date && x.date < iso(today) && !x.done; }
+function subsMeta(x){
+  const s=x.subs||[]; if(!s.length) return null;
+  const dn=s.filter(v=>v.done).length;
+  return `<span>${mi('list')}${t('subsMeta',{a:dn,b:s.length})}</span>`;
+}
 function commonMeta(x, title){
   let meta=[];
-  const dateKey = x.date, done = x.done;
-  const overdue = dateKey && dateKey < iso(today) && !done;
-  if(overdue) meta.push(`<span class="urgent">${t('overdueMeta')} · ${fmt(fromISO(dateKey))}</span>`);
+  if(isOver(x)) meta.push(`<span class="urgent">${t('overdueMeta')} · ${fmt(fromISO(x.date))}</span>`);
+  if(x.imp) meta.push(`<span class="imp-m">${mi('star')}${t('imp')}</span>`);
   if(x.time) meta.push(`<span>${mi('clock')}${x.time}</span>`);
   const bm=bellMeta(x); if(bm) meta.push(bm);
+  const sm=subsMeta(x); if(sm) meta.push(sm);
   if(x.repeat) meta.push(`<span>${mi('repeat')}${t(REP_KEYS[x.repeat])}</span>`);
   if(x.note) meta.push(`<span>${mi('doc')}${x.note.length>26? x.note.slice(0,26)+'…':x.note}</span>`);
   return meta;
 }
+// чек-лист внутри задачи
+function subsHTML(x){
+  const s=x.subs||[]; if(!s.length) return '';
+  return `<div class="t-subs">`+s.map((v,i)=>
+    `<div class="t-sub ${v.done?'sd':''}" onclick="event.stopPropagation();tgSub(${x.id},${i})">
+      <span class="sub-line">${v.done?ICS.ok:''}</span>${v.t}</div>`).join('')+`</div>`;
+}
 function taskHTML(x){
-  const overdue = x.date < iso(today) && !x.done;
+  const overdue = isOver(x);
   let meta = commonMeta(x);
   if(x.proj) meta.push(`<span class="proj">${mi('folder')}${x.proj}</span>`);
-  return `<div class="task ${x.done?'done':''} ${overdue?'overdue':''}" data-tid="${x.id}">
+  const inb = !x.date && !x.done;
+  return `<div class="task ${x.done?'done':''} ${overdue?'overdue':''} ${x.imp&&!x.done?'imp':''}" data-tid="${x.id}">
     <div class="chk" onclick="toggle(${x.id})">${x.done?ICS.ok:''}</div>
     <div class="t-body" onclick="openEdit(${x.id})" style="cursor:pointer"><div class="t-title">${x.title}</div>
     ${meta.length?'<div class="t-meta">'+meta.join(' ')+'</div>':''}
-    ${overdue?`<div class="ov-act">
+    ${subsHTML(x)}
+    ${(overdue||inb)?`<div class="ov-act">
       <button onclick="event.stopPropagation();moveTask(${x.id},0)">${t('toSelToday')}</button>
       <button onclick="event.stopPropagation();moveTask(${x.id},1)">${t('toTomorrow')}</button></div>`:''}</div>
     <div class="t-swipe-act">
@@ -694,11 +965,11 @@ function taskHTML(x){
 }
 function projTaskHTML(x){
   const it=x.item;
-  const overdue = it.date < iso(today) && !it.done;
+  const overdue = isOver(it);
   let meta = commonMeta(it);
   meta.push(`<span class="proj">${mi('folder')}${x.proj}</span>`);
   const ref=`${x.pid},${x.si},'${x.path}'`;
-  return `<div class="task ${it.done?'done':''} ${overdue?'overdue':''}" data-ref="${x.pid}|${x.si}|${x.path}">
+  return `<div class="task ${it.done?'done':''} ${overdue?'overdue':''} ${it.imp&&!it.done?'imp':''}" data-ref="${x.pid}|${x.si}|${x.path}">
     <div class="chk" onclick="tgItem(${ref})">${it.done?ICS.ok:''}</div>
     <div class="t-body" onclick="openEditProj(${ref})" style="cursor:pointer">
       <div class="t-title">${it.t}</div><div class="t-meta">${meta.join(' ')}</div>
@@ -710,17 +981,74 @@ function projTaskHTML(x){
       <button class="sw-btn danger" onclick="event.stopPropagation();delProjItem(${ref});toast(t('taskDeleted'))">${ICS.trash}</button>
     </div></div>`;
 }
+// пустое состояние с иконкой, объяснением и кнопкой
+function emptyBig(ic, title, desc, cta){
+  return `<div class="empty-big"><div class="eb-ic">${ICS[ic]}</div>
+    <h3>${title}</h3><p>${desc}</p>${cta||''}</div>`;
+}
+let todayTab='today';
+function setTodayTab(v){ todayTab=v; renderToday(); document.querySelector('main').scrollTop=0; }
+function inboxTasks(){ return tasks.filter(x=>!x.date&&!x.done); }
+// важные наверх, дальше — ручной порядок (тот, в котором задачи лежат в списке)
+function dayOrder(list){
+  return list.map((x,i)=>[x,i]).sort((a,b)=>{
+    if(!!a[0].imp!==!!b[0].imp) return a[0].imp?-1:1;
+    return a[1]-b[1];
+  }).map(v=>v[0]);
+}
+// новая задача со временем встаёт на своё место по времени, без времени — в конец дня
+function insertTaskSorted(x){
+  if(!x.date || !x.time){ tasks.push(x); return; }
+  let at=-1;
+  tasks.forEach((v,i)=>{ if(v.date===x.date && (!v.time || v.time<=x.time)) at=i; });
+  if(at<0) tasks.push(x); else tasks.splice(at+1,0,x);
+}
 function renderToday(){
   const el=document.getElementById('scr-today');
   const pd=datedProjItems();
-  const over=tasks.filter(x=>x.date<iso(today)&&!x.done), overP=pd.filter(x=>x.item.date<iso(today)&&!x.item.done);
-  const cur=tasks.filter(x=>x.date===iso(today)), curP=pd.filter(x=>x.item.date===iso(today));
-  const tom=tasks.filter(x=>x.date===iso(d(1))), tomP=pd.filter(x=>x.item.date===iso(d(1)));
-  let h='';
-  if(over.length+overP.length) h+=`<h2 class="section">${t('overdue')}</h2>`+over.map(taskHTML).join('')+overP.map(projTaskHTML).join('');
-  h+=`<h2 class="section">${t('today')}</h2>`;
-  h+=(cur.length+curP.length)? cur.map(taskHTML).join('')+curP.map(projTaskHTML).join('') : `<div class="empty">${t('allDone')}</div>`;
-  if(tom.length+tomP.length) h+=`<h2 class="section">${t('tomorrow')}</h2>`+tom.map(taskHTML).join('')+tomP.map(projTaskHTML).join('');
+  const inb=inboxTasks();
+  const seg=`<div class="seg" style="margin:2px 0 12px">
+    <button class="${todayTab==='today'?'active':''}" onclick="setTodayTab('today')">${t('segToday')}</button>
+    <button class="${todayTab==='up'?'active':''}" onclick="setTodayTab('up')">${t('segUp')}</button>
+    <button class="${todayTab==='inbox'?'active':''}" onclick="setTodayTab('inbox')">${t('segIn')}${inb.length?`<span class="seg-cnt">${inb.length}</span>`:''}</button>
+  </div>`;
+  let h=seg;
+
+  if(todayTab==='inbox'){
+    h += inb.length
+      ? `<div class="w-note" style="margin:0 0 10px">${t('inboxNote')}</div>`+dayOrder(inb).map(taskHTML).join('')
+      : emptyBig('inbox', t('inboxEmpty'), t('inboxEmptyD'),
+          `<button class="cta" onclick="openSheetInbox()">${t('laterNoDate')}</button>`);
+    el.innerHTML=h; return;
+  }
+
+  if(todayTab==='up'){
+    const rows=[];
+    for(let i=1;i<=14;i++){
+      const key=iso(d(i));
+      const list=dayOrder(tasks.filter(x=>x.date===key));
+      const listP=pd.filter(x=>x.item.date===key);
+      if(!list.length && !listP.length) continue;
+      const dt=fromISO(key);
+      rows.push(`<h2 class="section">${i===1? t('tomorrow') : fmt(dt)+', '+DL().DWF[dt.getDay()]}</h2>`
+        + list.map(taskHTML).join('') + listP.map(projTaskHTML).join(''));
+    }
+    h += rows.length ? rows.join('')
+      : emptyBig('cal', t('upEmpty'), t('upEmptyD'), `<button class="cta" onclick="openSheet()">${t('addTaskCta')}</button>`);
+    el.innerHTML=h; return;
+  }
+
+  const over=tasks.filter(isOver), overP=pd.filter(x=>isOver(x.item));
+  const cur=dayOrder(tasks.filter(x=>x.date===iso(today))), curP=pd.filter(x=>x.item.date===iso(today));
+  if(over.length+overP.length) h+=`<h2 class="section">${t('overdue')}</h2>`+dayOrder(over).map(taskHTML).join('')+overP.map(projTaskHTML).join('');
+  h+=`<h2 class="section" id="sec-today">${t('today')}</h2>`;
+  if(cur.length+curP.length){
+    h+=`<div id="today-list">`+cur.map(taskHTML).join('')+`</div>`+curP.map(projTaskHTML).join('');
+  } else if(tasks.length+projects.length===0){
+    h+=emptyBig('sun', t('whatToDo'), t('todayEmptyD'), `<button class="cta" onclick="openSheet()">${t('addTaskCta')}</button>`);
+  } else {
+    h+=`<div class="empty">${t('allDone')}</div>`;
+  }
   el.innerHTML=h;
 }
 function nextRepeatDate(x){
@@ -732,12 +1060,19 @@ function nextRepeatDate(x){
   if(x.repeat==='y') dt.setFullYear(dt.getFullYear()+1);
   return iso(dt);
 }
+function tgSub(id, i){
+  const x=tasks.find(v=>v.id===id); if(!x||!x.subs||!x.subs[i]) return;
+  x.subs[i].done=!x.subs[i].done;
+  rerenderAll(); saveState();
+}
 function toggle(id){
   const x=tasks.find(v=>v.id===id); if(!x) return;
   x.done=!x.done;
-  if(x.done && x.repeat){
+  x.doneAt = x.done ? iso(today) : undefined;
+  if(x.done && x.repeat && x.date){
     const nd=nextRepeatDate(x);
-    tasks.push({...x, id:++taskId, date:nd, done:false});
+    tasks.push({...x, id:++taskId, date:nd, done:false, doneAt:undefined,
+      subs:(x.subs||[]).map(s=>({t:s.t, done:false}))});
     toast(t('willRepeat',{d:fmt(fromISO(nd))}));
   } else if(x.done) toast(t('done1'));
   rerenderAll(); saveState();
@@ -745,6 +1080,7 @@ function toggle(id){
 function moveTask(id,off){
   const x=tasks.find(v=>v.id===id); if(!x) return;
   x.date=iso(d(off));
+  if(todayTab==='inbox' && !inboxTasks().length) todayTab='today';
   rerenderAll(); saveState();
   toast(t('movedTo',{d:(off===0?DL().todayCap:DL().tomorrowCap.toLowerCase())}));
 }
@@ -824,7 +1160,7 @@ function monthGridHTML(y,m,selISO,pickFn,navFn){
     return `<div class="${cls}" onclick="${pickFn}('${key}')">${dt.getDate()}<div class="mdot">${'•'.repeat(Math.min(cnt,3))}</div></div>`;
   }
   const wd = lang()==='en' ? ['mo','tu','we','th','fr','sa','su'] : ['пн','вт','ср','чт','пт','сб','вс'];
-  let h=`<div class="mc-head"><button onclick="${navFn}(-1)">‹</button><b>${name}</b><button onclick="${navFn}(1)">›</button></div><div class="mc-grid">`;
+  let h=`<div class="mc-head" data-nav="${navFn}"><button onclick="${navFn}(-1)">‹</button><b>${name}</b><button onclick="${navFn}(1)">›</button></div><div class="mc-grid" data-nav="${navFn}">`;
   wd.forEach(x=>h+=`<div class="dw">${x}</div>`);
   for(let i=0;i<start;i++) h+=cell(new Date(y,m,i-start+1),true);
   for(let dd=1;dd<=dim;dd++) h+=cell(new Date(y,m,dd),false);
@@ -832,6 +1168,38 @@ function monthGridHTML(y,m,selISO,pickFn,navFn){
   for(let i=1;i<=trail;i++) h+=cell(new Date(y,m+1,i),true);
   return h+'</div>';
 }
+
+// ===================== месяцы листаются пальцем (как лента дней) =====================
+let mcEl=null, mcX=0, mcY=0, mcLock=null, mcNav=null;
+document.addEventListener('pointerdown', e=>{
+  const g=e.target.closest('[data-nav]');
+  if(!g || e.target.closest('button')) return;
+  mcEl=g.closest('.mini-cal')||g; mcNav=g.dataset.nav;
+  mcX=e.clientX; mcY=e.clientY; mcLock=null;
+}, true);
+document.addEventListener('pointermove', e=>{
+  if(!mcEl) return;
+  const dx=e.clientX-mcX, dy=e.clientY-mcY;
+  if(!mcLock && (Math.abs(dx)>8||Math.abs(dy)>8)) mcLock=Math.abs(dx)>Math.abs(dy)?'x':'y';
+  if(mcLock!=='x') return;
+  mcEl.style.transform='translateX('+Math.max(-60,Math.min(60,dx*.4))+'px)';
+  mcEl.style.opacity=String(1-Math.min(.35,Math.abs(dx)/400));
+});
+function mcEnd(e){
+  if(!mcEl) return;
+  const dx=(e&&e.clientX!==undefined? e.clientX:mcX)-mcX;
+  const el=mcEl, nav=mcNav;
+  mcEl=null; mcNav=null;
+  el.style.transform=''; el.style.opacity='';
+  if(mcLock==='x' && Math.abs(dx)>50){
+    killClick();                       // чтобы не выбрался день под пальцем
+    if(nav==='calNav') calNav(dx<0?1:-1);
+    else if(nav==='addNav') addNav(dx<0?1:-1);
+  }
+  mcLock=null;
+}
+document.addEventListener('pointerup', mcEnd, true);
+document.addEventListener('pointercancel', mcEnd, true);
 
 // ===================== проекты =====================
 function countItem(i){ let all=1, done=i.done?1:0; (i.subs||[]).forEach(s=>{const c=countItem(s); all+=c.all; done+=c.done;}); return {all,done}; }
@@ -959,6 +1327,7 @@ function cancelAdd(){ editTarget=null; renderProjects(); }
 function tgItem(pid,si,path){
   const it=getItem(projects.find(x=>x.id===pid).stages[si],path);
   it.done=!it.done;
+  it.doneAt = it.done ? iso(today) : undefined;
   rerenderAll(); saveState();
 }
 function moveProjTask(pid,si,path,off){
@@ -1036,6 +1405,175 @@ function deleteStage(){
   toast(t('stageDeleted'));
 }
 // ===================== «Ещё»: настройки строками с подпунктами =====================
+// ===================== поиск =====================
+let srchQ='', srchImp=false, srchFrom='today';
+function openSearch(){
+  srchFrom = (screen==='search') ? srchFrom : screen;
+  srchQ=''; srchImp=false;
+  go('search');
+  setTimeout(()=>{ const el=document.getElementById('srch-input'); if(el) el.focus(); }, 120);
+}
+function renderSearch(){
+  document.getElementById('scr-search').innerHTML =
+    `<button class="back" onclick="goBack()">‹ ${t(srchFrom==='cal'?'calendar':srchFrom==='proj'?'projects':srchFrom==='arch'?'archive':'today')}</button>
+     <div class="input-row" style="margin:6px 0 8px">
+       <input id="srch-input" placeholder="${t('searchPh')}" value="${srchQ.replace(/"/g,'&quot;')}" oninput="srchInput(this.value)">
+     </div>
+     <div class="chips" style="margin-bottom:6px">
+       <div class="chip ${srchImp?'sel':''}" onclick="srchImp=!srchImp;srchInput(srchQ,true);renderSearchChip()">${t('onlyImp')}</div>
+     </div>
+     <div id="srch-res"></div>`;
+  srchInput(srchQ, true);
+}
+function renderSearchChip(){
+  const c=document.querySelector('#scr-search .chips .chip');
+  if(c) c.classList.toggle('sel', srchImp);
+}
+function hitsFor(q){
+  const s=q.trim().toLowerCase();
+  const has=v=>!!v && String(v).toLowerCase().includes(s);
+  const out=[];
+  tasks.forEach(x=>{
+    if(srchImp && !x.imp) return;
+    let src=null;
+    if(has(x.title)) src='';
+    else if(has(x.note)) src=t('inNote');
+    else if((x.subs||[]).some(v=>has(v.t))) src=t('subs');
+    if(src!==null) out.push({kind:'task', x, src});
+  });
+  projects.forEach(p=>{
+    const pn=has(p.name);
+    p.stages.forEach((st,si)=>{
+      const walk=(i,path)=>{
+        if(!(srchImp && !i.imp)){
+          if(has(i.t)||has(i.note)) out.push({kind:'proj', ref:{pid:p.id,si,path,item:i,proj:p.name}, src:p.name+' · '+st.name});
+        }
+        (i.subs||[]).forEach((v,vi)=>walk(v,path+'.'+vi));
+      };
+      st.items.forEach((i,ii)=>walk(i,String(ii)));
+    });
+    if(pn && !srchImp) out.push({kind:'pname', p});
+  });
+  return out;
+}
+function srchInput(v, keep){
+  srchQ=v;
+  const box=document.getElementById('srch-res'); if(!box) return;
+  if(!v.trim()){
+    box.innerHTML=emptyBig('search', t('searchStart'), t('searchStartD'));
+    return;
+  }
+  const hits=hitsFor(v);
+  if(!hits.length){ box.innerHTML=emptyBig('search', t('searchNothing'), t('searchStartD')); return; }
+  box.innerHTML = hits.map(hh=>{
+    if(hh.kind==='pname')
+      return `<div class="task" onclick="curProj=${hh.p.id};go('proj');curProj=${hh.p.id};renderProjects()">
+        <div class="chk" style="border:none;color:var(--accent)">${ICS.folder}</div>
+        <div class="t-body"><div class="t-title">${hh.p.name}</div>
+        <div class="res-src">${t('inProj')}</div></div></div>`;
+    if(hh.kind==='task')
+      return taskHTML(hh.x) + (hh.src? `<div class="res-src" style="margin:-6px 0 10px 4px">${hh.src}</div>`:'');
+    return projTaskHTML(hh.ref) + `<div class="res-src" style="margin:-6px 0 10px 4px">${hh.src}</div>`;
+  }).join('');
+}
+
+// ===================== архив выполненного =====================
+function doneList(){
+  const out=[];
+  tasks.filter(x=>x.done).forEach(x=>out.push({t:x.title, at:x.doneAt||'', imp:x.imp, id:x.id}));
+  projects.forEach(p=>p.stages.forEach(st=>{
+    const walk=i=>{ if(i.done) out.push({t:i.t, at:i.doneAt||'', imp:i.imp, proj:p.name}); (i.subs||[]).forEach(walk); };
+    st.items.forEach(walk);
+  }));
+  return out.sort((a,b)=> (b.at||'').localeCompare(a.at||''));
+}
+function streakDays(){
+  const done=doneList().filter(v=>v.at);
+  const set=new Set(done.map(v=>v.at));
+  let n=0;
+  for(let i=0;i<400;i++){ if(set.has(iso(d(-i)))) n++; else if(i>0||!set.has(iso(today))) break; }
+  return n;
+}
+function renderArch(){
+  const all=doneList();
+  const dToday=all.filter(v=>v.at===iso(today)).length;
+  const week=[];
+  for(let i=6;i>=0;i--){ const k=iso(d(-i)); week.push({k, n:all.filter(v=>v.at===k).length, dt:d(-i)}); }
+  const w7=week.reduce((s,v)=>s+v.n,0);
+  const mx=Math.max(1,...week.map(v=>v.n));
+  let h=`<button class="back" onclick="go('more')">‹ ${t('more')}</button>`;
+  if(!all.length){
+    h+=emptyBig('arch', t('archEmpty'), t('archEmptyD'));
+    document.getElementById('scr-arch').innerHTML=h; return;
+  }
+  h+=`<div class="stats">
+    <div class="stat"><b>${dToday}</b><span>${t('doneToday')}</span></div>
+    <div class="stat"><b>${w7}</b><span>${t('done7')}</span></div>
+    <div class="stat"><b>${streakDays()}</b><span>${t('streak')}</span></div>
+  </div>`;
+  h+=`<h2 class="section">${t('week7')}</h2><div class="bars">`+
+    week.map(v=>`<div class="bar"><i class="${v.n?'':'z'}" style="height:${Math.round(v.n/mx*100)}%"></i>
+      <u>${DL().DW[v.dt.getDay()]}</u></div>`).join('')+`</div>`;
+  // группы по дням
+  const groups={};
+  all.forEach(v=>{ const k=v.at||'~'; (groups[k]=groups[k]||[]).push(v); });
+  Object.keys(groups).sort((a,b)=>b.localeCompare(a)).forEach(k=>{
+    const label = k==='~' ? t('earlier')
+      : k===iso(today) ? t('today')
+      : k===iso(d(-1)) ? (lang()==='en'?'Yesterday':'Вчера')
+      : fmt(fromISO(k))+', '+DL().DWF[fromISO(k).getDay()];
+    h+=`<h2 class="section">${label}</h2>`+groups[k].map(v=>
+      `<div class="task done"><div class="chk">${ICS.ok}</div><div class="t-body">
+        <div class="t-title">${v.t}</div>
+        ${v.proj?`<div class="t-meta"><span class="proj">${mi('folder')}${v.proj}</span></div>`:''}
+      </div></div>`).join('');
+  });
+  h+=`<div class="group" style="margin-top:14px">${row('trash', t('clearArch'), '', 'clearArch()')}</div>`;
+  document.getElementById('scr-arch').innerHTML=h;
+}
+function clearArch(){
+  askConfirm(t('confirmArch'), ()=>{
+    tasks=tasks.filter(x=>!x.done);
+    projects.forEach(p=>p.stages.forEach(st=>{
+      const keep=i=>{ i.subs=(i.subs||[]).filter(keep); return !i.done || i.subs.length; };
+      st.items=st.items.filter(keep);
+    }));
+    saveState(); rerenderAll(); renderArch(); toast(t('archCleared'));
+  });
+}
+
+// ===================== резервная копия =====================
+function exportBackup(){
+  const data={app:'poryadok', v:4, at:new Date().toISOString(), tasks, projects, taskId, SET};
+  const blob=new Blob([JSON.stringify(data,null,1)], {type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='poryadok-'+iso(new Date())+'.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 400);
+  toast(t('exported'));
+}
+function pickBackup(){ document.getElementById('imp-file').click(); }
+function importBackup(input){
+  const f=input.files && input.files[0];
+  input.value='';
+  if(!f) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    let s=null;
+    try{ s=JSON.parse(rd.result); }catch(e){}
+    if(!s || !Array.isArray(s.tasks) || !Array.isArray(s.projects)){ toast(t('badFile')); return; }
+    askConfirm(t('confirmImport',{n:s.tasks.length}), ()=>{
+      tasks=s.tasks; projects=s.projects; taskId=s.taskId||100;
+      if(s.SET) SET={...SET, ...s.SET, notif:{...SET.notif, ...(s.SET.notif||{})}};
+      migrate();
+      applyTheme(); saveState(); renderNav(); renderAll();
+      toast(t('imported',{n:tasks.length}));
+    }, t('restore'));
+  };
+  rd.readAsText(f);
+}
+
 function row(ic, title, val, act){
   return `<div class="row" onclick="${act}">
     <div class="row-ic">${ICS[ic]}</div>
@@ -1043,10 +1581,28 @@ function row(ic, title, val, act){
     ${val? `<div class="row-v">${val}</div>`:''}
     <div class="row-ch">›</div></div>`;
 }
+function trialLeft(){
+  if(!SET.trialStart) return 0;
+  const gone=Math.floor((today-fromISO(SET.trialStart))/DAYSMS);
+  return Math.max(0, 14-gone);
+}
+function proStatus(){
+  if(SET.pro) return t('proActive');
+  if(SET.trialStart && trialLeft()>0) return t('proTrial',{n:trialLeft()});
+  return t('proFree');
+}
 function renderMore(){
   const themeName = t(SET.theme==='light'?'light':SET.theme==='dark'?'dark':'auto');
+  const doneN=doneList().length;
   document.getElementById('scr-more').innerHTML = `
     <div class="group" style="margin-top:8px">
+      ${row('crown', t('proTitle'), proStatus(), "openPay()")}
+    </div>
+    <div class="group">
+      ${row('arch', t('archive'), doneN? String(doneN):'', "go('arch')")}
+      ${row('search', t('search'), '', "openSearch()")}
+    </div>
+    <div class="group">
       ${row('look', t('setLook'), themeName, "openSet('look')")}
       ${row('globe', t('setLang'), lang()==='en'?'English':'Русский', "openSet('lang')")}
       ${row('bell', t('setNotif'), '', "openSet('notif')")}
@@ -1055,6 +1611,25 @@ function renderMore(){
     <div class="group">
       ${row('data', t('setData'), '', "openSet('data')")}
     </div>`;
+}
+// ползунок времени с шагом 10 минут — для сводок и тихих часов
+function hm2v(s){ const [h,m]=(s||'00:00').split(':').map(Number); return Math.round((h*60+m)/10); }
+function v2hm(v){ const m=v*10; return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
+function timeSlider(key){
+  const cur=SET.notif[key]||'00:00';
+  return `<div class="tm-row">
+    <span>${t(key)}</span>
+    <input type="range" min="0" max="143" step="1" value="${hm2v(cur)}"
+      oninput="setNotifTime('${key}', this.value, this)">
+    <b id="tm-${key}">${cur}</b>
+  </div>`;
+}
+function setNotifTime(key, v, el){
+  const hm=v2hm(+v);
+  SET.notif[key]=hm;
+  const b=document.getElementById('tm-'+key);
+  if(b) b.textContent=hm;   // без перерисовки — иначе ползунок теряет палец
+  saveState();
 }
 function renderSet(){
   let h=`<button class="back" onclick="go('more')">‹ ${t('more')}</button>`;
@@ -1107,8 +1682,17 @@ function renderSet(){
   else if(setPage==='notif'){
     const N=SET.notif;
     h+=`<div style="margin-top:6px">`+
-      [['persist','notifPersist'],['evening','notifEvening'],['morning','notifMorning'],['quiet','notifQuiet']].map(([k,lab])=>
+      [['persist','notifPersist']].map(([k,lab])=>
         `<div class="toggle-row">${t(lab)}<div class="tg ${N[k]?'on':''}" onclick="SET.notif.${k}=!SET.notif.${k};saveState();renderSet()"></div></div>`).join('')+`</div>`;
+    // сводки: включение + своё время (пункт Романа)
+    h+=`<h2 class="section">${t('digest')}</h2><div>`+
+      `<div class="toggle-row">${t('eveningAt')}<div class="tg ${N.evening?'on':''}" onclick="SET.notif.evening=!SET.notif.evening;saveState();renderSet()"></div></div>`+
+      (N.evening? timeSlider('eveningAt') : '')+
+      `<div class="toggle-row">${t('morningAt')}<div class="tg ${N.morning?'on':''}" onclick="SET.notif.morning=!SET.notif.morning;saveState();renderSet()"></div></div>`+
+      (N.morning? timeSlider('morningAt') : '')+
+      `<div class="toggle-row">${t('notifQuiet').split(' ')[0]+' '+(lang()==='en'?'hours':'часы')}<div class="tg ${N.quiet?'on':''}" onclick="SET.notif.quiet=!SET.notif.quiet;saveState();renderSet()"></div></div>`+
+      (N.quiet? timeSlider('quietFrom')+timeSlider('quietTo') : '')+
+      `</div><div class="w-note">${t('digestNote')}</div>`;
     h+=`<h2 class="section">${t('notifHow')}</h2>
       <div class="group">
         <div class="row" style="cursor:default"><div class="row-ic">${ICS.bell}</div><div style="flex:1"><div class="row-t" style="font-size:14px"><b>${t('notifDemo1')}</b></div><div class="sw-d">${t('notifDemo1s')}</div></div></div>
@@ -1126,10 +1710,22 @@ function renderSet(){
   }
 
   else if(setPage==='data'){
-    h+=`<div class="group" style="margin-top:6px">
-      ${row('data', t('saveCopy'), '', "toast(t('copyNote'))")}
-      ${row('trash', t('resetAll'), '', 'resetAllData()')}
-    </div><div class="w-note">${t('dataNote')}</div>`;
+    h+=`<h2 class="section" style="margin-top:6px">${t('backup')}</h2>
+      <div class="group">
+        <div class="row" onclick="exportBackup()">
+          <div class="row-ic">${ICS.down}</div>
+          <div style="flex:1"><div class="row-t">${t('exportB')}</div><div class="sw-d">${t('exportD')}</div></div>
+          <div class="row-ch">›</div></div>
+        <div class="row" onclick="pickBackup()">
+          <div class="row-ic">${ICS.up}</div>
+          <div style="flex:1"><div class="row-t">${t('importB')}</div><div class="sw-d">${t('importD')}</div></div>
+          <div class="row-ch">›</div></div>
+      </div>
+      <div class="w-note">${t('dataNote')}</div>
+      <div class="group" style="margin-top:6px">
+        ${row('arch', t('archive'), String(doneList().length), "go('arch')")}
+        ${row('trash', t('resetAll'), '', 'resetAllData()')}
+      </div>`;
   }
 
   document.getElementById('scr-set').innerHTML=h;
@@ -1192,11 +1788,16 @@ function widget44(){
 // ===================== шторка создания/редактирования =====================
 let selDate=iso(today), selTime='', selProj=0, selRemind=false;
 let selRemStart=true, selRemBefore=[], selRemPersist=false, selRepeat='';
+let selImp=false, selSubs=[];
 let sheetMode='add', editTaskId=null, editProjRef=null;
 function buildSheetLabels(){
   document.getElementById('q-input').placeholder=t('qPlaceholder');
   document.getElementById('sheet-hint').textContent=t('hint');
   document.getElementById('note-input').placeholder=t('notePh');
+  document.getElementById('lbl-subs').textContent=t('subs');
+  document.getElementById('sub-input').placeholder=t('subPh');
+  document.getElementById('sub-add').innerHTML=ICS.plus;
+  document.getElementById('lbl-imp').textContent=t('imp');
   document.getElementById('lbl-day').textContent=t('day');
   document.getElementById('lbl-time').textContent=t('timeRemind');
   document.getElementById('lbl-slider').textContent=t('ownTime');
@@ -1213,7 +1814,7 @@ function buildSheetLabels(){
 function buildChips(){
   // лента дат: сегодня, завтра, дальше 60 дней — прокручивается как в «Записано»
   const dc=document.getElementById('date-chips');
-  let h = sheetMode==='editProj' ? `<div class="chip" data-d="">${t('noDate')}</div>` : '';
+  let h = `<div class="chip" data-d="">${t('noDate')}</div>`;
   h+=`<div class="chip" data-d="${iso(today)}">${DL().todayChip}</div><div class="chip" data-d="${iso(d(1))}">${DL().tomorrowCap}</div>`;
   const near=[iso(today), iso(d(1))];
   for(let i=2;i<=60;i++){
@@ -1293,10 +1894,33 @@ function markChips(){
     else c.classList.toggle('sel', selRemBefore.includes(+c.dataset.r));
   });
   document.getElementById('persist-tg').classList.toggle('on', selRemPersist);
+  document.getElementById('imp-tg').classList.toggle('on', selImp);
   document.querySelectorAll('#rep-chips .chip').forEach(c=>c.classList.toggle('sel', c.dataset.rep===selRepeat));
 }
 function toggleRemind(){ selRemind=!selRemind; markChips(); }
 function togglePersist(){ selRemPersist=!selRemPersist; markChips(); }
+function toggleImp(){ selImp=!selImp; markChips(); }
+// чек-лист в шторке
+function showSubsBlock(on){
+  ['lbl-subs','subs-list','sub-row'].forEach(id=>{
+    document.getElementById(id).style.display = on ? '' : 'none';
+  });
+}
+function renderSubs(){
+  const box=document.getElementById('subs-list');
+  box.innerHTML = selSubs.map((v,i)=>
+    `<div class="t-sub ${v.done?'sd':''}">
+      <span class="sub-line" onclick="selSubs[${i}].done=!selSubs[${i}].done;renderSubs()">${v.done?ICS.ok:''}</span>
+      <span style="flex:1" onclick="selSubs[${i}].done=!selSubs[${i}].done;renderSubs()">${v.t}</span>
+      <button class="sub-x" onclick="selSubs.splice(${i},1);renderSubs()">${ICS.cross}</button>
+    </div>`).join('');
+}
+function addSub(){
+  const el=document.getElementById('sub-input');
+  const v=el.value.trim(); if(!v) return;
+  selSubs.push({t:v, done:false});
+  el.value=''; renderSubs(); el.focus();
+}
 function sliderTime(v){
   const mins=v*10;
   const tv=String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0');
@@ -1361,12 +1985,18 @@ function showSheet(){
   document.getElementById('sheet').classList.add('up');
   setTimeout(()=>document.getElementById('q-input').focus(),300);
 }
-function openSheet(){
+function openSheetInbox(){ openSheet(true); }
+function openSheet(noDate){
   editTaskId=null; sheetMode='add'; editProjRef=null;
-  selDate=iso(today); selTime=''; selProj=0; selRemind=false;
+  const inbox = noDate===true || (screen==='today' && todayTab==='inbox');
+  selDate = inbox ? '' : iso(today);
+  selTime=''; selProj=0; selRemind=false;
   selRemStart=true; selRemBefore=[]; selRemPersist=false; selRepeat='';
+  selImp=false; selSubs=[];
   document.getElementById('q-input').value='';
   document.getElementById('note-input').value='';
+  document.getElementById('sub-input').value='';
+  showSubsBlock(true); renderSubs();
   document.getElementById('sheet-title').textContent=t('newTask');
   document.getElementById('add-btn').textContent=t('add');
   document.getElementById('del-btn').style.display='none';
@@ -1381,8 +2011,11 @@ function openEdit(id){
   editTaskId=id; sheetMode='editTask'; editProjRef=null;
   selDate=x.date; selTime=x.time||''; selProj=0; selRemind=!!x.remind;
   selRemStart=x.remStart!==false; selRemBefore=[...(x.remBefore||[])]; selRemPersist=!!x.remPersist; selRepeat=x.repeat||'';
+  selImp=!!x.imp; selSubs=(x.subs||[]).map(s=>({...s}));
   document.getElementById('q-input').value=x.title;
   document.getElementById('note-input').value=x.note||'';
+  document.getElementById('sub-input').value='';
+  showSubsBlock(true); renderSubs();
   document.getElementById('sheet-title').textContent=t('editTask');
   document.getElementById('add-btn').textContent=t('save');
   document.getElementById('del-btn').style.display='block';
@@ -1398,8 +2031,11 @@ function openEditProj(pid,si,path){
   sheetMode='editProj'; editProjRef={pid,si,path}; editTaskId=null;
   selDate=it.date||''; selTime=it.time||''; selProj=0; selRemind=!!it.remind;
   selRemStart=it.remStart!==false; selRemBefore=[...(it.remBefore||[])]; selRemPersist=!!it.remPersist; selRepeat='';
+  selImp=!!it.imp; selSubs=[];
   document.getElementById('q-input').value=it.t;
   document.getElementById('note-input').value=it.note||'';
+  document.getElementById('sub-input').value='';
+  showSubsBlock(false); renderSubs();
   document.getElementById('sheet-title').textContent=t('projTask');
   document.getElementById('add-btn').textContent=t('save');
   document.getElementById('del-btn').style.display='block';
@@ -1426,15 +2062,16 @@ function addTask(){
     it.t=title; it.date=selDate||undefined; it.time=selTime||undefined;
     it.remind=selRemind&&!!selDate;
     it.remStart=selRemStart; it.remBefore=[...selRemBefore]; it.remPersist=selRemPersist;
-    it.note=noteVal();
+    it.note=noteVal(); it.imp=selImp||undefined;
     editProjRef=null; closeSheet(); rerenderAll(); saveState(); toast(t('saved'));
     return;
   }
   if(editTaskId){
     const x=tasks.find(v=>v.id===editTaskId);
-    if(x){ x.title=title; x.date=selDate; x.time=selTime; x.remind=selRemind;
+    if(x){ x.title=title; x.date=selDate; x.time=selTime; x.remind=selRemind&&!!selDate;
       x.remStart=selRemStart; x.remBefore=[...selRemBefore]; x.remPersist=selRemPersist;
-      x.repeat=selRepeat||undefined; x.note=noteVal(); }
+      x.repeat=selRepeat||undefined; x.note=noteVal();
+      x.imp=selImp||undefined; x.subs=selSubs.map(s=>({...s})); }
     editTaskId=null; closeSheet(); rerenderAll(); saveState(); toast(t('saved'));
     return;
   }
@@ -1442,14 +2079,20 @@ function addTask(){
   if(pname){
     const p=projects.find(x=>x.id===selProj);
     p.stages[0].items.push({t:title, done:false, date:selDate||undefined, time:selTime||undefined,
-      remind:selRemind&&!!selDate, remStart:selRemStart, remBefore:[...selRemBefore], remPersist:selRemPersist, note:noteVal()});
+      remind:selRemind&&!!selDate, remStart:selRemStart, remBefore:[...selRemBefore], remPersist:selRemPersist,
+      note:noteVal(), imp:selImp||undefined,
+      subs:selSubs.map(s=>({t:s.t, done:false}))});
   } else {
-    tasks.push({id:++taskId, title, date:selDate, time:selTime, done:false, remind:selRemind,
+    insertTaskSorted({id:++taskId, title, date:selDate, time:selTime, done:false, remind:selRemind&&!!selDate,
       remStart:selRemStart, remBefore:[...selRemBefore], remPersist:selRemPersist,
-      repeat:selRepeat||undefined, note:noteVal(), proj:pname});
+      repeat:selRepeat||undefined, note:noteVal(), proj:pname,
+      imp:selImp||undefined, subs:selSubs.map(s=>({...s}))});
+    if(!selDate && screen==='today') todayTab='inbox';
   }
   closeSheet();
-  toast(pname? t('addedToProj',{p:pname}) : t('taskOn',{d:(selDate===iso(today)? DL().todayCap : fmt(fromISO(selDate)))}));
+  toast(pname? t('addedToProj',{p:pname})
+       : !selDate ? t('inbox')+' · '+t('added')
+       : t('taskOn',{d:(selDate===iso(today)? DL().todayCap : fmt(fromISO(selDate)))}));
   rerenderAll(); saveState();
 }
 function deleteTask(){
@@ -1465,10 +2108,10 @@ function deleteTask(){
 }
 
 // ===================== подтверждение / тост =====================
-function askConfirm(text, fn){
+function askConfirm(text, fn, okLabel){
   document.getElementById('confirm-text').textContent=text;
   document.getElementById('confirm-no').textContent=t('cancel');
-  document.getElementById('confirm-yes').textContent=t('del');
+  document.getElementById('confirm-yes').textContent=okLabel||t('del');
   document.getElementById('confirm-yes').onclick=()=>{ hideConfirm(); fn(); };
   document.getElementById('confirm-bg').style.display='flex';
 }
@@ -1479,28 +2122,140 @@ function toast(msg){
   clearTimeout(el._h); el._h=setTimeout(()=>el.classList.remove('show'),2200);
 }
 
+// ===================== онбординг и подписка =====================
+const ONB=[
+  ['sun','onb1t','onb1d'],
+  ['folder','onb2t','onb2d'],
+  ['bell','onb3t','onb3d'],
+];
+let onbStep=0;
+function openOnb(){ onbStep=0; renderOnb(); document.getElementById('onb').classList.add('show'); }
+function renderOnb(){
+  const [ic,tk,dk]=ONB[onbStep];
+  document.getElementById('onb').innerHTML=`
+    <button class="skip" onclick="finishOnb()">${t('skip')}</button>
+    <div class="onb-mid">
+      ${onbStep===0 ? `<div class="art">${logoSVG(SET.accent,82)}</div>`
+                    : `<div class="eb-ic" style="margin:0 auto 20px">${ICS[ic]}</div>`}
+      <h2>${t(tk)}</h2>
+      <p>${t(dk)}</p>
+    </div>
+    <div class="dots">${ONB.map((_,i)=>`<i class="${i===onbStep?'on':''}"></i>`).join('')}</div>
+    <button class="cta wide" onclick="onbNext()">${onbStep===ONB.length-1? t('onbStart') : t('onbNext')}</button>`;
+}
+function onbNext(){
+  if(onbStep<ONB.length-1){ onbStep++; renderOnb(); return; }
+  finishOnb(true);
+}
+function finishOnb(showPay){
+  SET.seen=true; saveState();
+  document.getElementById('onb').classList.remove('show');
+  if(showPay) setTimeout(openPay, 260);
+}
+function openPay(){
+  const F=['proF1','proF2','proF3','proF4','proF5'];
+  document.getElementById('pay').innerHTML=`
+    <button class="skip" onclick="closePay()">${ICS.cross}</button>
+    <div class="art">${logoSVG(SET.accent,64)}</div>
+    <h2>${t('proTitle')}</h2>
+    <p>${t('proSub')}</p>
+    <div class="feat">${F.map(k=>`<div>${mi('ok')}${t(k)}</div>`).join('')}</div>
+    <div class="plan sel" id="plan-y" onclick="pickPlan('y')">
+      <div><b>${t('planY')}</b><span>${t('planYs')}</span></div><div class="badge">${t('best')}</div></div>
+    <div class="plan" id="plan-m" onclick="pickPlan('m')">
+      <div><b>${t('planM')}</b><span>${t('planMs')}</span></div></div>
+    <button class="cta wide" onclick="startTrial()">${t('startTrial')}</button>
+    <div class="w-note" style="text-align:center">${t('trialNote')}<br>${t('demoOnly')}</div>`;
+  document.getElementById('pay').classList.add('show');
+}
+function pickPlan(v){
+  document.getElementById('plan-y').classList.toggle('sel', v==='y');
+  document.getElementById('plan-m').classList.toggle('sel', v==='m');
+}
+function closePay(){ document.getElementById('pay').classList.remove('show'); if(screen==='more') renderMore(); }
+function startTrial(){
+  if(!SET.trialStart) SET.trialStart=iso(today);
+  saveState(); closePay(); toast(t('trialOn'));
+}
+
+// ===================== назад: кнопка и свайп слева направо =====================
+function goBack(){
+  if(document.getElementById('confirm-bg').style.display==='flex'){ hideConfirm(); return true; }
+  if(document.getElementById('sheet').classList.contains('up')){ closeSheet(); return true; }
+  if(document.getElementById('pay').classList.contains('show')){ closePay(); return true; }
+  if(document.getElementById('onb').classList.contains('show')){
+    if(onbStep>0){ onbStep--; renderOnb(); return true; }
+    return true; // с первого слайда назад некуда
+  }
+  if(screen==='set'){ go('more'); return true; }
+  if(screen==='arch'){ go('more'); return true; }
+  if(screen==='search'){ go(srchFrom==='search'?'today':srchFrom); return true; }
+  if(screen==='proj' && curProj!==null){ resetPEdits(); curProj=null; renderProjects(); return true; }
+  if(screen==='cal' && calExpanded){ toggleMonth(); return true; }
+  if(screen==='today' && todayTab!=='today'){ setTodayTab('today'); return true; }
+  if(screen!=='today'){ go('today'); return true; }
+  return false;
+}
+// свайп от левого края экрана
+const phoneEl=document.getElementById('phone');
+let egX=0, egY=0, egOn=false, egLock=null;
+function egTargets(){ return [document.querySelector('main'), document.getElementById('sheet')]; }
+phoneEl.addEventListener('pointerdown', e=>{
+  const r=phoneEl.getBoundingClientRect();
+  if(e.clientX-r.left>28) return;
+  if(e.target.closest('input,textarea,.chips,.weekstrip,.mc-grid,.bars')) return;
+  egOn=true; egX=e.clientX; egY=e.clientY; egLock=null;
+}, true);
+phoneEl.addEventListener('pointermove', e=>{
+  if(!egOn) return;
+  const dx=e.clientX-egX, dy=e.clientY-egY;
+  if(!egLock && (Math.abs(dx)>8||Math.abs(dy)>8)) egLock = Math.abs(dx)>Math.abs(dy)*1.2 ? 'x' : 'y';
+  if(egLock!=='x') return;
+  const sh=Math.max(0, Math.min(70, dx*.45));
+  egTargets().forEach(el=>{ if(el) el.style.transform='translateX('+sh+'px)'; });
+});
+function egEnd(e){
+  if(!egOn) return;
+  const dx=(e&&e.clientX!==undefined? e.clientX:egX)-egX;
+  egOn=false;
+  egTargets().forEach(el=>{ if(el){ el.style.transition='transform .18s'; el.style.transform='';
+    setTimeout(()=>{ el.style.transition=''; },200); } });
+  if(egLock==='x' && dx>64){ killClick(); goBack(); }
+  egLock=null;
+}
+phoneEl.addEventListener('pointerup', egEnd, true);
+phoneEl.addEventListener('pointercancel', egEnd, true);
+
 // ===================== свайпы по задачам =====================
-let swEl=null, swX=0, swY=0, swDx=0, swLock=null, swSuppress=false;
+let swEl=null, swX=0, swY=0, swDx=0, swLock=null, swSupAt=0;
+function killClick(){ swSupAt=Date.now(); }
 const mainEl=document.querySelector('main');
 mainEl.addEventListener('pointerdown', e=>{
   const x=e.target.closest('.task');
-  if(!x || e.target.closest('button') || e.target.closest('.chk')) return;
+  if(!x || e.target.closest('button') || e.target.closest('.chk') || e.target.closest('.t-sub')) return;
+  const r=phoneEl.getBoundingClientRect();
+  if(e.clientX-r.left<30) return;          // левый край отдан жесту «назад»
   swEl=x; swX=e.clientX; swY=e.clientY; swDx=0; swLock=null;
+  startHold(x, e);
 });
 mainEl.addEventListener('pointermove', e=>{
+  if(dgEl){ dragMove(e); return; }
   if(!swEl) return;
   const dx=e.clientX-swX, dy=e.clientY-swY;
+  if((Math.abs(dx)>8||Math.abs(dy)>8)) clearHold();
   if(!swLock && (Math.abs(dx)>9||Math.abs(dy)>9)) swLock=Math.abs(dx)>Math.abs(dy)*1.3?'x':'y';
   if(swLock!=='x') return;
   swDx=dx;
   swEl.style.transform='translateX('+Math.max(-110,Math.min(110,swDx))+'px)';
 });
 function swEnd(){
+  clearHold();
+  if(dgEl){ dragEnd(); return; }
   if(!swEl) return;
   const el=swEl, dx=swLock==='x'?swDx:0;
   swEl=null; swLock=null;
   el.style.transform='';
-  if(Math.abs(dx)>12) swSuppress=true;
+  if(Math.abs(dx)>12) killClick();
   document.querySelectorAll('.task.swiped').forEach(x=>{ if(x!==el) x.classList.remove('swiped'); });
   if(dx>70){
     if(el.dataset.tid) toggle(+el.dataset.tid);
@@ -1510,9 +2265,63 @@ function swEnd(){
   swDx=0;
 }
 mainEl.addEventListener('pointerup', swEnd);
-mainEl.addEventListener('pointercancel', ()=>{ if(swEl){ swEl.style.transform=''; swEl=null; swLock=null; } });
+mainEl.addEventListener('pointercancel', ()=>{ clearHold(); if(dgEl) dragEnd();
+  if(swEl){ swEl.style.transform=''; swEl=null; swLock=null; } });
+
+// ===================== ручной порядок дня: долгое нажатие + перетаскивание =====================
+let holdT=null, dgEl=null, dgBox=null, dgY=0, dgTop=0;
+function startHold(el, e){
+  if(!el.dataset.tid) return;                      // порядок меняем только у своих задач
+  const box=el.parentElement;
+  if(!box || box.id!=='today-list') return;
+  const y=e.clientY;
+  holdT=setTimeout(()=>{
+    holdT=null;
+    swEl=null; swLock=null;
+    dgEl=el; dgBox=box; dgY=y; dgTop=0;
+    el.classList.add('drag');
+    mainEl.style.overflow='hidden';
+    if(navigator.vibrate) try{ navigator.vibrate(12); }catch(_){}
+  }, 420);
+}
+function clearHold(){ if(holdT){ clearTimeout(holdT); holdT=null; } }
+function dragMove(e){
+  dgTop=e.clientY-dgY;
+  dgEl.style.transform='translateY('+dgTop+'px)';
+  const sibs=[...dgBox.children].filter(x=>x!==dgEl);
+  const cy=e.clientY;
+  for(const s of sibs){
+    const r=s.getBoundingClientRect();
+    const mid=r.top+r.height/2;
+    const after = dgEl.compareDocumentPosition(s) & Node.DOCUMENT_POSITION_FOLLOWING;
+    if(after && cy>mid){ dgBox.insertBefore(dgEl, s.nextSibling); dgY=e.clientY-dgTop; }
+    else if(!after && cy<mid){ dgBox.insertBefore(dgEl, s); dgY=e.clientY-dgTop; }
+  }
+}
+function dragEnd(){
+  const el=dgEl, box=dgBox;
+  dgEl=null; dgBox=null;
+  mainEl.style.overflow='';
+  el.classList.remove('drag');
+  el.style.transform='';
+  killClick();
+  applyOrder(box);
+}
+// переписываем массив tasks: id из DOM ложатся на те же позиции, что занимали
+function applyOrder(box){
+  const ids=[...box.children].map(x=>+x.dataset.tid).filter(Boolean);
+  const idx=[]; tasks.forEach((x,i)=>{ if(ids.includes(x.id)) idx.push(i); });
+  if(idx.length!==ids.length) return;
+  const byId={}; tasks.forEach(x=>byId[x.id]=x);
+  idx.forEach((pos,k)=>{ tasks[pos]=byId[ids[k]]; });
+  saveState(); toast(t('orderSaved'));
+  renderToday();
+}
+// после жеста гасим «призрачный» клик, но только если он пришёл сразу —
+// иначе следующее осмысленное касание пользователя пропало бы
 document.addEventListener('click', e=>{
-  if(swSuppress){ e.stopPropagation(); e.preventDefault(); swSuppress=false; }
+  if(Date.now()-swSupAt < 400){ e.stopPropagation(); e.preventDefault(); }
+  swSupAt=0;
 }, true);
 
 // ===================== голосовой ввод =====================
@@ -1538,11 +2347,22 @@ function voiceInput(){
 
 // ===================== сохранение =====================
 function saveState(){
-  try{ localStorage.setItem('poryadok-v3', JSON.stringify({tasks, projects, taskId, SET})); }catch(e){}
+  try{ localStorage.setItem('poryadok-v4', JSON.stringify({tasks, projects, taskId, SET})); }catch(e){}
+}
+// приводим данные старых версий к нынешней форме
+function migrate(){
+  tasks.forEach(x=>{
+    if(x.date===undefined || x.date===null) x.date='';
+    if(!Array.isArray(x.subs)) x.subs=[];
+    if(x.done && !x.doneAt) x.doneAt='';       // «раньше» в архиве
+  });
+  const walk=i=>{ if(i.done && !i.doneAt) i.doneAt=''; (i.subs||[]).forEach(walk); };
+  projects.forEach(p=>p.stages.forEach(st=>st.items.forEach(walk)));
 }
 function loadState(){
   try{
-    let s=JSON.parse(localStorage.getItem('poryadok-v3'));
+    let s=JSON.parse(localStorage.getItem('poryadok-v4'));
+    if(!s) s=JSON.parse(localStorage.getItem('poryadok-v3'));
     if(!s){ // миграция со старой тест-версии
       const old=JSON.parse(localStorage.getItem('poryadok-v2'));
       if(old && old.tasks){ s={tasks:old.tasks, projects:old.projects, taskId:old.taskId, SET:{...SET, theme:old.themeMode||'dark'}}; }
@@ -1550,8 +2370,10 @@ function loadState(){
     if(s && s.tasks && s.projects){
       tasks=s.tasks; projects=s.projects; taskId=s.taskId||100;
       if(s.SET) SET={...SET, ...s.SET, notif:{...SET.notif, ...(s.SET.notif||{})}};
+      if(tasks.length || projects.length) SET.seen=true;   // старым тестерам онбординг не показываем
     }
   }catch(e){}
+  migrate();
 }
 
 // ===================== старт =====================
@@ -1560,8 +2382,13 @@ applyTheme();
 buildSheetLabels();
 renderNav();
 go('today');
+if(!SET.seen) setTimeout(openOnb, 400);
 setInterval(saveState, 3000);
 window.addEventListener('pagehide', saveState);
+// системная кнопка «назад» на Android + Esc на компьютере
+history.pushState({p:1}, '');
+window.addEventListener('popstate', ()=>{ goBack(); history.pushState({p:1}, ''); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') goBack(); });
 </script>
 </body>
 </html>
